@@ -1,10 +1,10 @@
-from InstructionMemory import InstructionMemory
+from MainMemory import MainMemory
 
 
 def main():
-    instruct_memory = InstructionMemory()
-    test = int(input())
-    print(instruct_memory.get_instruction(test))
+    # Pruebas
+    system_main_memory = MainMemory()
+    system_main_memory.print_instruction_block(1)
 
 
 main()
