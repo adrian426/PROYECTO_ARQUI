@@ -5,8 +5,6 @@ from InstructionBlock import InstructionBlock
 # Clase para la memoria de instrucciones
 class InstructionMemory:
 
-
-
     # Constructor que inicializa la lista con los valores
     def __init__(self):
         self.__instruction_block_array = []
@@ -31,7 +29,6 @@ class InstructionMemory:
 
         # Se incrementa en 4 para la siguiente instruccion
         self.__next_word += 4
-
 
     # Función para imprimir el bloque
     def print_instruction_block(self, index):
