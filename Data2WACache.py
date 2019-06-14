@@ -1,7 +1,7 @@
 from AbsCache import AbsCache
 
 
-class Data2WACache(AbsCache):
+class Data2WACache:
 
     dataBlock = [0,0,0,0]
     dataBlocksLoaded = [dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock]
@@ -32,7 +32,8 @@ class Data2WACache(AbsCache):
         else:
             return range(4,7)
 
-    def getBlockIndex(self, memAdd, way):
+    def getBlockIndex(self, memAdd):
+        way = self.getBlockWay(memAdd)
         addressRange = self.getWayRange(way)
         for index in addressRange:
             if self.dataBlockAddresses[index] == memAdd / 16:

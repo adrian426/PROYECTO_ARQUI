@@ -1,11 +1,11 @@
 from AbsCache import AbsCache
 
-class DataFACache(AbsCache):
-
+class DataFACache():
     dataBlock = [0,0,0,0]
     dataBlocksLoaded = [dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock]
     dataBlockAddresses = [0, 0, 0, 0, 0, 0, 0, 0]
     dataBlocksState = ["I", "I", "I", "I", "I", "I", "I", "I"]
+
     def __init__(self):
         super.__init__()
 
@@ -27,8 +27,6 @@ class DataFACache(AbsCache):
         #memAdd - memAdd % 16 is used to know the address of the memory BLOCK using
         #the address of the data.
         self.changeBlockState(memAdd, state)
-
-
 
 
 
