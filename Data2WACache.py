@@ -1,6 +1,5 @@
 from AbsCache import AbsCache
 
-
 class Data2WACache(AbsCache):
 
     dataBlock = [0,0,0,0]
