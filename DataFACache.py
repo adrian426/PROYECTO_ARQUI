@@ -4,8 +4,8 @@ class DataFACache(AbsCache):
 
     dataBlock = [0,0,0,0]
     dataBlocksLoaded = [dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock]
-    dataBlockAddresses = [-1, -1, -1, -1, -1, -1, -1, -1]
-    dataBlocksState = ["U", "U", "U", "U", "U", "U", "U", "U"]
+    dataBlockAddresses = [0, 0, 0, 0, 0, 0, 0, 0]
+    dataBlocksState = ["I", "I", "I", "I", "I", "I", "I", "I"]
     def __init__(self):
         super.__init__()
 

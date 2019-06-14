@@ -5,8 +5,8 @@ class Data2WACache(AbsCache):
 
     dataBlock = [0,0,0,0]
     dataBlocksLoaded = [dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock]
-    dataBlockAddresses = [-1, -1, -1, -1, -1, -1, -1, -1]
-    dataBlocksState = ["U", "U", "U", "U", "U", "U", "U", "U"]
+    dataBlockAddresses = [0, 0, 0, 0, 0, 0, 0, 0]
+    dataBlocksState = ["I", "I", "I", "I", "I", "I", "I", "I"]
     fifo_index_way_0 = 0
     fifo_index_way_1 = 0
 
@@ -26,8 +26,14 @@ class Data2WACache(AbsCache):
     def getBlockWay(self, memAdd):
         return (memAdd % 16) / 2
 
+    def getWayRange(self, way):
+        if way == 0:
+            return range(0,3)
+        else:
+            return range(4,7)
+
     def getBlockIndex(self, memAdd, way):
-        addressRange = range((way * 4) - 1, (way * 4) + 3)
+        addressRange = self.getWayRange(way)
         for index in addressRange:
             if self.dataBlockAddresses[index] == memAdd / 16:
                 return index
@@ -37,12 +43,7 @@ class Data2WACache(AbsCache):
         return self.dataBlocksLoaded[self.getBlockIndex(memAdd,way)][self.getDataIndex(memAdd)]
 
     def storeDataBlockInCache(self, state, memAdd, dataBlock):
-        targetBlock = -1
-        way = self.getBlockWay(memAdd)
-        if way == 0:
-            targetBlock = self.fifo_index_way_0
-        else:
-            targetBlock = self.fifo_index_way_1
+        targetBlock, way = self.getTargetBlockIndex(memAdd)
         self.dataBlocksLoaded[targetBlock] = dataBlock
         self.dataBlockAddresses[targetBlock] = memAdd/16 #Store the block address
         self.changeBlockState(memAdd, state)
@@ -54,8 +55,12 @@ class Data2WACache(AbsCache):
         else:
             self.fifo_index_way_1 = (self.fifo_index_way_1 + 1) % 4
 
-
-
+    def getTargetBlockIndex(self,memAdd):
+        way = self.getBlockWay(memAdd)
+        if way == 0:
+            return self.fifo_index_way_0, way
+        else:
+            return 4 + self.fifo_index_way_1, way
 
 
 
