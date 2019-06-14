@@ -1,34 +1,33 @@
 from AbsCache import AbsCache
 
-# Fully associative cache
-class DataCache0(AbsCache):
+class InstructionsCache(AbsCache):
 
-    dataBlock = [0,0,0,0]
+    instruction = [0, 0, 0, 0]
+    dataBlock = [instruction, instruction, instruction, instruction]
+
     dataBlocksLoaded = [dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock]
     dataBlockAddresses = [-1, -1, -1, -1, -1, -1, -1, -1]
     dataBlocksState = ["U", "U", "U", "U", "U", "U", "U", "U"]
+
     def __init__(self):
         super.__init__()
 
     def getIfMemAddressIsCached(self, memAdd):
-        if self.dataBlockAddresses[self.getBlockIndex(memAdd)] == memAdd/16:
+        if self.dataBlockAddresses[self.getBlockIndex(memAdd)] == (memAdd / 16).asType(int):
             return True
-        else:
-            return False
+        return False
 
     def getBlockIndex(self, memAdd):
-        return ((memAdd/16) % 8).asType(int)
+        return ((memAdd / 16) % 8).asType(int)
 
+    #In this case, data is referring to the instruction
     def getDataFromCachedBlock(self, memAdd):
         return self.dataBlocksLoaded[self.getBlockIndex(memAdd)][self.getDataIndex(memAdd)]
 
-    def storeDataBlockInCache(self, state, memAdd, dataBlock):
+    def storeBlockInCache(self, state, memAdd, dataBlock):
         targetBlock = self.getBlockIndex(memAdd)
         self.dataBlocksLoaded[targetBlock] = dataBlock
-        self.dataBlockAddresses[targetBlock] = memAdd - (memAdd % 16) #Store the block address
+        self.dataBlockAddresses[targetBlock] = (memAdd / 16).asType(int)  # Store the block address
+        # memAdd - memAdd % 16 is used to know the address of the memory BLOCK using
+        # the address of the data.
         self.changeBlockState(memAdd, state)
-
-
-
-
-

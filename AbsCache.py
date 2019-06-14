@@ -48,7 +48,8 @@ class AbsCache(ABC):
         pass
 
     #Used to know if given a memory address, the related memory block is
-    #loaded in cache.
+    #loaded in cache. Should only be used if the block is known to be
+    #in cache.
     @abstractmethod
     def getBlockIndex(self, memAdd):
         pass
@@ -64,7 +65,7 @@ class AbsCache(ABC):
         pass
 
     @abstractmethod
-    def storeDataBlockInCache(self, state, memAdd, dataBlock):
+    def storeBlockInCache(self, state, memAdd, dataBlock):
         pass
 
     #Changes the state of the memory address in the cache.
