@@ -1,5 +1,5 @@
-from InstructionMemory import InstructionMemory
-from PCB import PCB
+from InstructionMemory.InstructionMemory import InstructionMemory
+import PCB
 
 
 # Clase para la memoria principal del sistema
