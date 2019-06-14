@@ -1,7 +1,6 @@
 # coding=utf-8
 from InstructionBlock import InstructionBlock
 
-
 # Clase para la memoria de instrucciones
 class InstructionMemory:
 
