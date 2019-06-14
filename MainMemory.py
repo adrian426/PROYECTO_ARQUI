@@ -1,4 +1,4 @@
-from InstructionMemory.InstructionMemory import InstructionMemory
+from InstructionMemory import InstructionMemory
 
 
 # Clase para la memoria principal del sistema
@@ -21,6 +21,11 @@ class MainMemory:
                                                      [37, 4, 20, 12],
                                                      [37, 0, 0, 176],
                                                      [999, 0, 0, 0]])
+
+        # Se crea el PCB y se inserta en la estructura del PCB
+        # register_array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        #                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        # instruction_pcb = PCB()
 
     # Metodo de prueba
     def print_instruction_block(self, block_id):
