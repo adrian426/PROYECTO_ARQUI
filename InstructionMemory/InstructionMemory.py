@@ -1,30 +1,37 @@
-from InstructionMemory.InstructionBlock import InstructionBlock
+# coding=utf-8
+from InstructionBlock import InstructionBlock
 
 
 # Clase para la memoria de instrucciones
 class InstructionMemory:
 
+
+
     # Constructor que inicializa la lista con los valores
     def __init__(self):
         self.__instruction_block_array = []
+        self.__next_word = 0
+        self.__block_amount = 0
 
     # Método para cargar todos los bloques de instrucciones de la memoria principal
-    # Recibe el arreglo con todas las instrucciones, que también son arreglos de tamaño 4
-    def store_instructions(self, all_instruction_array):
-        block_counter = 0
-        # Se itera sobre el array de instrucciones recibido,
-        # Iteración por bloques
-        while block_counter*4 < len(all_instruction_array):
+    # Recibe la instruccion a insertar
+    def store_instruction(self, instruction):
+        # Se calcula el numero de bloque
+        block_number = self.__next_word / 16
+
+        if block_number == self.__block_amount:
+            self.__instruction_block_array[block_number].insert_instruction(instruction)
+        else:
+            # Se crea un nuevo bloque y se agrega
             instruction_block = InstructionBlock()
-            iterator = block_counter*4
-            instructions_array = []
-            # Iteración por instrucciones dentro del bloque
-            while iterator < len(all_instruction_array) and iterator < (block_counter*4+4):
-                instructions_array.append(all_instruction_array[iterator])
-                iterator += 1
-            instruction_block.initialize_instructions(instructions_array)
+            instruction_block.insert_instruction(instruction)
             self.__instruction_block_array.append(instruction_block)
-            block_counter += 1
+            # Se incrementa la cantidad de bloques
+            self.__block_amount += 1
+
+        # Se incrementa en 4 para la siguiente instruccion
+        self.__next_word += 4
+
 
     # Función para imprimir el bloque
     def print_instruction_block(self, index):
