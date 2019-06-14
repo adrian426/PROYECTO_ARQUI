@@ -6,8 +6,8 @@ class InstructionsCache(AbsCache):
     dataBlock = [instruction, instruction, instruction, instruction]
 
     dataBlocksLoaded = [dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock, dataBlock]
-    dataBlockAddresses = [-1, -1, -1, -1, -1, -1, -1, -1]
-    dataBlocksState = ["U", "U", "U", "U", "U", "U", "U", "U"]
+    dataBlockAddresses = [0, 0, 0, 0, 0, 0, 0, 0]
+    dataBlocksState = ["I", "I", "I", "I", "I", "I", "I", "I"]
 
     def __init__(self):
         super.__init__()
