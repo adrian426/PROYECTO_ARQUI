@@ -1,5 +1,5 @@
 from InstructionMemory.InstructionMemory import InstructionMemory
-import PCB
+from PCB import PCB
 
 
 # Clase para la memoria principal del sistema
@@ -33,8 +33,6 @@ class MainMemory:
                     [37, 4, 20, 8]]
 
         array_hilillos = [hilillo1, hilillo2]
-
-
 
         for hilillo in array_hilillos:
             instruction_counter = 0

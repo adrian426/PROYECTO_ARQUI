@@ -1,5 +1,5 @@
-# coding=utf-8
 from InstructionMemory.InstructionBlock import InstructionBlock
+
 
 # Clase para la memoria de instrucciones
 class InstructionMemory:
@@ -14,7 +14,13 @@ class InstructionMemory:
     # Recibe la instruccion a insertar
     def store_instruction(self, instruction):
         # Se calcula el numero de bloque
-        block_number = self.__next_word / 16
+        block_number = self.__next_word // 16
+
+        # Caso en el que es la primera instrucion
+        if len(self.__instruction_block_array) == 0:
+            # Se crea un nuevo bloque y se agrega
+            instruction_block = InstructionBlock()
+            self.__instruction_block_array.append(instruction_block)
 
         if block_number == self.__block_amount:
             self.__instruction_block_array[block_number].insert_instruction(instruction)

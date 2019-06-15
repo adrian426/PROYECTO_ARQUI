@@ -1,6 +1,8 @@
 from InstructionMemory.Instruction import Instruction
 
+
 class InstructionBlock:
+
     def __init__(self):
         self.__words = [Instruction(), Instruction(), Instruction(), Instruction()]
         self.__word_counter = 0
