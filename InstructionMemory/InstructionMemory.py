@@ -1,5 +1,8 @@
 from InstructionMemory.InstructionBlock import InstructionBlock
 
+# Direccion inicial de la memoria de instrucciones
+INITIAL_DIR = 384
+
 
 # Clase para la memoria de instrucciones
 class InstructionMemory:
@@ -35,6 +38,40 @@ class InstructionMemory:
         # Se incrementa en 4 para la siguiente instruccion
         self.__next_word += 4
 
-    # Función para imprimir el bloque
+    # Funcion para retornar el bloque del pc correspondiente
+    def get_instruction_block(self, pc):
+        # Se adapta el PC para utilizarlo en esta funcion
+        pc_function = pc - INITIAL_DIR
+
+        # Se revisa que el pc recibido sea multiplo de 4
+        if pc_function % 4 != 0:
+            raise TypeError("Se recibio un PC que no es multiplo de 4")
+        # Se revisa que el bloque exista
+        if pc_function >= self.__next_word:
+            raise TypeError("Se solicito una instruccion que no existe")
+        # Se revisa que sea mayor igual a 0
+        if pc_function < 0:
+            raise TypeError("El PC solicitado no corresponde a una direccion de la memoria de instrucciones")
+        # Se retorna el bloque
+        return self.__instruction_block_array[pc_function // 16]
+
+    # Funcion para obtener la instruccion especifica
+    def get_instruction(self, pc):
+        # Se adapta el PC para utilizarlo en esta funcion
+        pc_function = pc - INITIAL_DIR
+
+        # Se revisa que el pc recibido sea multiplo de 4
+        if pc_function % 4 != 0:
+            raise TypeError("Se recibio un PC que no es multiplo de 4")
+        # Se revisa que el bloque exista
+        if pc_function >= self.__next_word:
+            raise TypeError("Se solicito una instruccion que no existe")
+        # Se revisa que sea mayor igual a 0
+        if pc_function < 0:
+            raise TypeError("El PC solicitado no corresponde a una direccion de la memoria de instrucciones")
+        # Se retorna la instruccion
+        return self.__instruction_block_array[pc_function // 16].get_instruction(pc)
+
+    # Funcion para imprimir el bloque
     def print_instruction_block(self, index):
         self.__instruction_block_array[index].print_block()
