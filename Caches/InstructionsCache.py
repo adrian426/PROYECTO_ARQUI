@@ -4,6 +4,9 @@ from Caches.AbsCache import AbsCache
 # fully associative cache
 class InstructionsCache(AbsCache):
 
+    def __init__(self, blockContent):
+        AbsCache.__init__(blockContent)
+
     def get_if_mem_address_is_cached(self, memAdd):
         if self.dataBlocksAddress[self.get_block_index(memAdd)] == (memAdd / 16).asType(int):
             return True

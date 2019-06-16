@@ -7,8 +7,8 @@ class Data2WACache(AbsCache):
     fifo_index_way_0 = 0
     fifo_index_way_1 = 0
 
-    def __init__(self):
-        super.__init__()
+    def __init__(self, blockContent):
+        AbsCache.__init__(blockContent)
 
     def get_if_mem_address_is_cached(self, memAdd):
         way = self.get_block_way(memAdd)
