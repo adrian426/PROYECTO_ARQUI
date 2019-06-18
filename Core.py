@@ -8,8 +8,9 @@ from threading import Thread
 
 class Core(Thread):
 
-    def __init__(self, cache_type: int, PCBStructure):
-        self.__cache_id = cache_type
+    def __init__(self, cache_type: int, PCBStructure, cpu_instance):
+        self.__core_id = cache_type
+        self.__cpu_instance = cpu_instance
 
         # Constructor del thread
         Thread.__init__(self)
@@ -31,8 +32,9 @@ class Core(Thread):
         self.instructionCache = InstructionsCache(instruction)
 
     def run(self):
-        for iterator in range(1, 99):
-            print("Iteracion # ", iterator, "del nucleo # ", self.__cache_id)
+        for iterator in range(0, 5):
+            self.__cpu_instance.wait(self.__core_id)
+            # print("Iteracion # ", iterator, "del nucleo # ", self.__core_id)
 
 
 
