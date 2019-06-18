@@ -28,9 +28,9 @@ class Data2WACache(AbsCache):
     @staticmethod
     def get_way_range(self, way):
         if way == 0:
-            return range(0,3)
+            return range(0,4)
         else:
-            return range(4,7)
+            return range(4,8)
 
     def get_block_index(self, memAdd):
         way = self.get_block_way(memAdd)
