@@ -8,7 +8,7 @@ class Data2WACache(AbsCache):
     fifo_index_way_1 = 0
 
     def __init__(self, blockContent):
-        AbsCache.__init__(blockContent)
+        AbsCache.__init__(self, blockContent)
 
     def get_if_mem_address_is_cached(self, memAdd):
         way = self.get_block_way(memAdd)
@@ -43,7 +43,7 @@ class Data2WACache(AbsCache):
         way = self.get_block_way(memAdd)
         return self.dataBlocksLoaded[self.get_block_index(memAdd, way)][self.getDataIndex(memAdd)]
 
-    def store_data_block_in_cache(self, state, memAdd, dataBlock):
+    def store_block_in_cache(self, state, memAdd, dataBlock):
         targetBlock = self.get_target_block_index(memAdd)
         if targetBlock > 3:
             way = 1

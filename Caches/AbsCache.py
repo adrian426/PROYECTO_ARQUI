@@ -8,10 +8,10 @@ class AbsCache(ABC):
         self.dataBlocksAddress = []
         self.dataBlocksState = []
         for i in range(0, 7):
-            self.dataBlocksLoaded.extend(blockContents)
-            self.dataBlockAddresses.extend(0)
+            self.dataBlocksLoaded.append(blockContents)
+            self.dataBlocksAddress.append(0)
             self.dataBlocksState.extend("I")
-        super.__init__()
+        # super.__init__()
 
     # FOR ALL THE METHODS BELOW, memAdd SHOULD BE THE ADDRESS OF THE DATA,
     # NOT THE BLOCK ADDRESS.
