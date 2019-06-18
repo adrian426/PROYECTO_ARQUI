@@ -1,7 +1,7 @@
 from Core import Core
 from PCBDataStructure import PCBDataStructure
 from MainMemory import MainMemory
-from threading import Barrier
+from threading import Barrier, Lock
 
 
 class CPU:
@@ -15,6 +15,10 @@ class CPU:
 
         self.__system_clock = 0
 
+        # bus datos, bus instrucciones, cache 0, cache 1
+        self.__locks = [Lock(), Lock(),Lock(),Lock()]
+
+
     # Metodo para la barrera e incrementar el relog del sistema
     def wait(self, core_id):
         print("Waiting", core_id)
@@ -27,3 +31,11 @@ class CPU:
     def start_cores(self):
         self.__core0.start()
         self.__core1.start()
+
+    def acquire__lock(self, lock_index):
+        self.__locks[lock_index].acquire(False)
+
+    def release_locks(self, lock_indexes):
+        for index in lock_indexes:
+            self.__locks[index].release()
+    
