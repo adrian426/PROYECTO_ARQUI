@@ -2,16 +2,17 @@ class PCB:
     hililloId = -1
     registers = []
     PCAddress = 0 #Address of the instruction where the PCB should start executing
-    quantum = 0
-    def __init__(self, theHilillo, address, assignedQuantum):
+
+    def __init__(self, theHilillo, address, registers):
         self.hililloId = theHilillo
-        self.registers = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.registers = registers
         self.PCAddress = address
-        self.quantum = assignedQuantum
 
     def alterRegisterValue(self, registerId, value):
         self.registers[registerId] = value
 
-    def diminishQuantumValue(self):
-        self.quantum -= 1;
+    # Metodo para imprimir el pcb
+    def print_pcb_data(self):
+        print("Hilillo : " + self.hililloId)
+        print("Registros : " + str(self.registers))
+        print("DirMem : " + str(self.PCAddress))

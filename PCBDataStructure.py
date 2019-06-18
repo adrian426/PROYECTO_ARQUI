@@ -15,3 +15,10 @@ class PCBDataStructure:
 
     def dequeuePCB(self, PCB):
         self.availablePCBs.get(PCB, block=True)
+
+    # Metodo para imprimir los pcbs
+    def print_all_pcbs(self):
+        pcb_list = list(self.availablePCBs.queue)
+        for pcb in pcb_list:
+            print("\n")
+            pcb.print_pcb_data()
