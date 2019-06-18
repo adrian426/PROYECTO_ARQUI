@@ -12,7 +12,7 @@ class Data2WACache(AbsCache):
 
     def get_if_mem_address_is_cached(self, memAdd):
         way = self.get_block_way(memAdd)
-        addressRange = range((way*4)-1, (way*4)+3)
+        addressRange = self.get_way_range(way)
         # if it's in the way 0, then addressRange is 0-3,
         #  3-7 otherwise
         for index in addressRange:
@@ -23,7 +23,7 @@ class Data2WACache(AbsCache):
     @staticmethod
     #  Returns the way assigned to the memory Address received as parameter.
     def get_block_way(self, memAdd):
-        return (memAdd % 16) / 2
+        return (memAdd / 16) % 2
 
     @staticmethod
     def get_way_range(self, way):
