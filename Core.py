@@ -5,6 +5,7 @@ from InstructionMemory.Instruction import Instruction
 from Caches.InstructionsCache import InstructionsCache
 from PCB import PCB
 from threading import Thread
+from Model.LW import LW
 
 
 class Core(Thread):
@@ -45,6 +46,8 @@ class Core(Thread):
             instruction_to_execute = self.get_instruction_to_execute(self.PC)
             instruction_to_print  = str(self.hilillo_id) + " owner " + str(self.__core_id)
             print(instruction_to_print + " instruction " + instruction_to_execute.instruction_to_string())
+            # Test to execute LW instruction
+            # lw_exec = LW(self, instruction_to_execute)
             # print("Iteracion # ", iterator, "del nucleo # ", self.__core_id)
 
     # Loads the data from the pcb, used in context switch
@@ -82,3 +85,34 @@ class Core(Thread):
 
     def increment_PC(self):
         self.PC += 4
+
+    def exec_instruction(self):
+        pass
+    # ToDo Metodo para ejecutar la instrucción, que va a llamar al decoder y a ejecutar la instruccion dependiendo
+    #  de cual es
+
+    # Method to set the cycles that the core will have to wait to load next instruction and release the locks
+    def set_instruction_system_clock_cycles(self):
+        pass
+    # ToDo Se tiene que hacer un metodo que las instrucciones puedan llamar para indicarle al Core cuantos
+    #  ciclos debe esperar para solicitar la siguiente instruccion y para liberar los candados
+
+    # Method to acquire the lock of the data memory bus
+    def acquire_data_bus(self):
+        return self.__cpu_instance.acquire__lock(0)
+
+    # Method to acquire the lock of the instruction memory bus
+    def acquire_instruction_bus(self):
+        return self.__cpu_instance.acquire__lock(1)
+
+    # Method to acquire the lock of self cache
+    def acquire_self_cache(self):
+        return self.__cpu_instance.acquire__lock(self.__core_id + 2)
+
+    # Method to acquire the lock of the other core cache
+    def acquire_other_core_cache(self):
+        if self.__core_id == 0:
+            result = self.__cpu_instance.acquire__lock(3)
+        else:
+            result = self.__cpu_instance.acquire__lock(2)
+        return result
