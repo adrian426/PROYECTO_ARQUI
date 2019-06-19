@@ -9,7 +9,7 @@ from threading import Thread
 
 class Core(Thread):
 
-    def __init__(self, cache_type: int, PCBStructure, cpu_instance, quantumV_val):
+    def __init__(self, cache_type: int, PCBStructure, cpu_instance, quantum_val):
         self.__core_id = cache_type
         self.__cpu_instance = cpu_instance
 
@@ -35,13 +35,15 @@ class Core(Thread):
         self.register = []
         self.PC = 0
         self.RL = 0
-        self.quantum = quantumV_val
+        self.quantum = quantum_val
 
     def run(self):
         for iterator in range(0, 5):
             self.context_switch()
             self.__cpu_instance.wait(self.__core_id)
-            print(self.hilillo_id)
+            cosit0 = self.hilillo_id + "   owner" + str(self.__core_id)
+            self.get_instruction_to_execute(self.PC).print_block()
+            print(cosit0)
             # print("Iteracion # ", iterator, "del nucleo # ", self.__core_id)
 
 
@@ -78,6 +80,8 @@ class Core(Thread):
         if not self.instructionCache.get_if_mem_address_is_cached(mem_add):
             instruction_block = self.__cpu_instance.get_main_memory().get_instruction_block(mem_add)
             self.instructionCache.store_block_in_cache("C", mem_add, instruction_block)
+        #ToDO: Arreglar este return pa que retorne instruccion y no bloque, implica arreglar el retorno
+        #de la palabra en las caches.
         return self.instructionCache.get_block(self.instructionCache.get_block_index(mem_add))
 
     def increment_PC(self):

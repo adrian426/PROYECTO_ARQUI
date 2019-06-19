@@ -39,7 +39,7 @@ class Data2WACache(AbsCache):
             if self.dataBlockAddresses[index] == memAdd / 16:
                 return index
 
-    def get_data_from_cached_block(self, memAdd):
+    def get_word_from_cached_block(self, memAdd):
         way = self.get_block_way(memAdd)
         return self.dataBlocksLoaded[self.get_block_index(memAdd, way)][self.getDataIndex(memAdd)]
 

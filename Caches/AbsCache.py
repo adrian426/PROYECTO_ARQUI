@@ -30,7 +30,7 @@ class AbsCache(ABC):
         pass
 
     @abstractmethod
-    def get_data_from_cached_block(self, memAdd):
+    def get_word_from_cached_block(self, memAdd):
         pass
 
     @abstractmethod
@@ -45,8 +45,8 @@ class AbsCache(ABC):
     @staticmethod
     # Returns the index of the address inside a data block, ie, the index
     # in which the required data is stored in the data block
-    def get_data_index(memAdd):
-        return ((memAdd % 16) / 4).asType(int)
+    def get_word_index(memAdd):
+        return int((memAdd % 16) / 4)
 
     @staticmethod
     def get_block_state(self, index):
@@ -60,4 +60,4 @@ class AbsCache(ABC):
 
     # Changes the state of the memory address in the cache.
     def change_block_state(self, memAdd, state):
-        self.dataBlocksState[self.getBlockIndex(memAdd)] = state
+        self.dataBlocksState[self.get_block_index(memAdd)] = state
