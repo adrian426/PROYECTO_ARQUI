@@ -74,6 +74,7 @@ class Core(Thread):
     #if the instruction block is not cached, proceeds to load it.
     #Returns the instruction to be executed
     def get_instruction_to_execute(self, mem_add):
+        #no se si quieren guardar como atributo de clase la instruccion que se esta ejecutando.
         if not self.instructionCache.get_if_mem_address_is_cached(mem_add):
             instruction_block = self.__cpu_instance.get_main_memory().get_instruction_block(mem_add)
             self.instructionCache.store_block_in_cache("C", mem_add, instruction_block)
