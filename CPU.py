@@ -19,12 +19,11 @@ class CPU:
         # bus datos, bus instrucciones, cache 0, cache 1
         self.__locks = [Lock(), Lock(),Lock(),Lock()]
 
-
     # Metodo para la barrera e incrementar el relog del sistema
     def wait(self, core_id):
-        print("Waiting", core_id)
+        # print("Waiting", core_id)
         barrier_thread_id = self.threads_barrier.wait()
-        print(barrier_thread_id)
+        # print(barrier_thread_id)
         if barrier_thread_id == 0:
             self.__system_clock += 1
 

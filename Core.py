@@ -41,12 +41,11 @@ class Core(Thread):
         for iterator in range(0, 5):
             self.context_switch()
             self.__cpu_instance.wait(self.__core_id)
-            cosit0 = self.hilillo_id + "   owner" + str(self.__core_id)
-            self.get_instruction_to_execute(self.PC).print_block()
-            print(cosit0)
+
+            instruction_to_execute = self.get_instruction_to_execute(self.PC)
+            instruction_to_print  = str(self.hilillo_id) + " owner " + str(self.__core_id)
+            print(instruction_to_print + " instruction " + instruction_to_execute.instruction_to_string())
             # print("Iteracion # ", iterator, "del nucleo # ", self.__core_id)
-
-
 
     # Loads the data from the pcb, used in context switch
     def load_pcb(self):
@@ -57,15 +56,14 @@ class Core(Thread):
             self.PC = pcb.get_pc_address()
             self.hilillo_id = pcb.get_hilillo_id()
 
-
     def context_switch(self):
         # No se si se manda PC, depende donde se aumente.
         pcb = PCB(self.hilillo_id, self.PC, self.register)
 
         # hay que ver si esto funca con la instruccion fin, me parece que no
-        #if it's not the first iteration, doesn't store the init value of the core
+        # if it's not the first iteration, doesn't store the init value of the core
         if self.hilillo_id != -1:
-            #if the quantum hasn't ended, the PCB is added again to the queue.
+            # if the quantum hasn't ended, the PCB is added again to the queue.
             if self.quantum != 0:
                 self.__cpu_instance.get_pcb_ds().queuePCB(pcb)
             else:
@@ -73,16 +71,14 @@ class Core(Thread):
         # We call the pcb load function to load the next "hilillo" to execute
         self.load_pcb()
 
-    #if the instruction block is not cached, proceeds to load it.
-    #Returns the instruction to be executed
+    # if the instruction block is not cached, proceeds to load it.
+    # Returns the instruction to be executed
     def get_instruction_to_execute(self, mem_add):
-        #no se si quieren guardar como atributo de clase la instruccion que se esta ejecutando.
+        # no se si quieren guardar como atributo de clase la instruccion que se esta ejecutando.
         if not self.instructionCache.get_if_mem_address_is_cached(mem_add):
             instruction_block = self.__cpu_instance.get_main_memory().get_instruction_block(mem_add)
             self.instructionCache.store_block_in_cache("C", mem_add, instruction_block)
-        #ToDO: Arreglar este return pa que retorne instruccion y no bloque, implica arreglar el retorno
-        #de la palabra en las caches.
-        return self.instructionCache.get_block(self.instructionCache.get_block_index(mem_add))
+        return self.instructionCache.get_block(self.instructionCache.get_block_index(mem_add)).get_instruction(mem_add)
 
     def increment_PC(self):
         self.PC += 4
