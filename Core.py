@@ -9,7 +9,7 @@ from threading import Thread
 
 class Core(Thread):
 
-    def __init__(self, cache_type: int, PCBStructure, cpu_instance):
+    def __init__(self, cache_type: int, PCBStructure, cpu_instance, quantumV_val):
         self.__core_id = cache_type
         self.__cpu_instance = cpu_instance
 
@@ -35,38 +35,49 @@ class Core(Thread):
         self.register = []
         self.PC = 0
         self.RL = 0
-        self.quantum = 0
+        self.quantum = quantumV_val
 
     def run(self):
         for iterator in range(0, 5):
+            self.context_switch()
             self.__cpu_instance.wait(self.__core_id)
+            print(self.hilillo_id)
             # print("Iteracion # ", iterator, "del nucleo # ", self.__core_id)
 
 
 
-    # Loads the data from the pcb
+    # Loads the data from the pcb, used in context switch
     def load_pcb(self):
-        pcb = self.__cpu_instance.get_pcb_ds().dequeuePCB()
-        self.register = pcb.registers
-        self.PC = pcb.PCAddress
-        self.hilillo_id = pcb.hililloId
+        pcb_ds = self.__cpu_instance.get_pcb_ds()
+        if pcb_ds.get_count() > 0:
+            pcb = pcb_ds.dequeuePCB()
+            self.register = pcb.get_registers()
+            self.PC = pcb.get_pc_address()
+            self.hilillo_id = pcb.get_hilillo_id()
+
 
     def context_switch(self):
         # No se si se manda PC, depende donde se aumente.
         pcb = PCB(self.hilillo_id, self.PC, self.register)
 
-        #if the quantum hasn't ended, the PCB is added again to the queue.
-        if self.quantum != 0:
-            self.__cpu_instance.queuePCB(pcb)
-        else:
-            self.__cpu_instance.queueFinishedPCB(pcb)
+        # hay que ver si esto funca con la instruccion fin, me parece que no
+        #if it's not the first iteration, doesn't store the init value of the core
+        if self.hilillo_id != -1:
+            #if the quantum hasn't ended, the PCB is added again to the queue.
+            if self.quantum != 0:
+                self.__cpu_instance.get_pcb_ds().queuePCB(pcb)
+            else:
+                self.__cpu_instance.get_pcb_ds().queueFinishedPCB(pcb)
         # We call the pcb load function to load the next "hilillo" to execute
         self.load_pcb()
 
-    def load_instruction(self, mem_add):
-        if self.instructionCache.get_if_mem_address_is_cached(mem_add) == False:
-            instructionBlock = self.__cpu_instance.get_main_memory()
-            instructionBlock = instructionBlock.get_instruction_block(mem_add)
-            self.instructionCache.store_block_in_cache("C", mem_add, instructionBlock)
+    #if the instruction block is not cached, proceeds to load it.
+    #Returns the instruction to be executed
+    def get_instruction_to_execute(self, mem_add):
+        if not self.instructionCache.get_if_mem_address_is_cached(mem_add):
+            instruction_block = self.__cpu_instance.get_main_memory().get_instruction_block(mem_add)
+            self.instructionCache.store_block_in_cache("C", mem_add, instruction_block)
+        return self.instructionCache.get_block(self.instructionCache.get_block_index(mem_add))
 
-
+    def increment_PC(self):
+        self.PC += 4

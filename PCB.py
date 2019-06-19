@@ -8,6 +8,14 @@ class PCB:
     def alterRegisterValue(self, registerId, value):
         self.registers[registerId] = value
 
+    def get_hilillo_id(self):
+        return self.hililloId
+
+    def get_registers(self):
+        return self.registers
+
+    def get_pc_address(self):
+        return self.PCAddress
 
     # Metodo para imprimir el pcb
     def print_pcb_data(self):

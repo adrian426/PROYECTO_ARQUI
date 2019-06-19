@@ -10,8 +10,9 @@ class CPU:
         self.__pcb = PCBDataStructure()
         self.threads_barrier = Barrier(2)
         self.__system_main_memory = MainMemory(self.__pcb)
-        self.__core0 = Core(0, self.__pcb, self)
-        self.__core1 = Core(1, self.__pcb, self)
+        #Hay que preguntar para que ingresen en valor del quantum
+        self.__core0 = Core(0, self.__pcb, self, 16)
+        self.__core1 = Core(1, self.__pcb, self, 16)
 
         self.__system_clock = 0
 

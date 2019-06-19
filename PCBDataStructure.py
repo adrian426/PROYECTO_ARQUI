@@ -1,13 +1,16 @@
 from queue import Queue
 
+
 class PCBDataStructure:
 
     def __init__(self):
         self.availablePCBs = Queue()
         self.finishedPCBs = Queue()
+        self.count = 0
 
     def queuePCB(self, PCB):
         self.availablePCBs.put(PCB, block=True)
+        self.count += 1
 
     def queueFinishedPCB(self, PCB):
         self.finishedPCBs.put(PCB, block=True)
@@ -16,7 +19,12 @@ class PCBDataStructure:
         return self.finishedPCBs
 
     def dequeuePCB(self):
-        self.availablePCBs.get(block=True)
+        pcb = self.availablePCBs.get(block=True)
+        self.count -= 1
+        return pcb
+
+    def get_count(self):
+        return self.count
 
     # Metodo para imprimir los pcbs
     def print_all_pcbs(self):
