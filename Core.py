@@ -62,7 +62,6 @@ class Core(Thread):
             self.__cpu_instance.queueFinishedPCB(pcb)
         # We call the pcb load function to load the next "hilillo" to execute
         self.load_pcb()
-        self.load_pcb()
 
     def load_instruction(self, mem_add):
         if self.instructionCache.get_if_mem_address_is_cached(mem_add) == False:
