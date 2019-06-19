@@ -38,4 +38,9 @@ class CPU:
     def release_locks(self, lock_indexes):
         for index in lock_indexes:
             self.__locks[index].release()
-    
+
+    def get_pcb_ds(self):
+        return self.__pcb
+
+    def get_main_memory(self):
+        return self.__system_main_memory
