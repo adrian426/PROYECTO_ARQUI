@@ -52,6 +52,10 @@ class AbsCache(ABC):
     def get_block_state(self, index):
         return self.dataBlocksState[index]
 
+    # Returns the state of the block that contains the memory address value
+    def get_memory_address_block_state(self, memory_address):
+        return self.dataBlocksState[self.get_block_index(memory_address)]
+
     def get_block_address(self, index):
         return self.dataBlocksAddress[index]
 
