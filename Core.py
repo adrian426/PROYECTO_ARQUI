@@ -10,9 +10,11 @@ from Model.LW import LW
 
 class Core(Thread):
 
-    def __init__(self, cache_type: int, PCBStructure, cpu_instance, quantum_val):
-        self.__core_id = cache_type
-        self.__cpu_instance = cpu_instance
+    def __init__(self, cache_type: int, PCBStructure):
+        self.__cache_id = cache_type
+        #se inicializa 32 registros en 0
+        self.__registers = [0] * 32
+        self.rl = 0
 
         # Constructor del thread
         Thread.__init__(self)
