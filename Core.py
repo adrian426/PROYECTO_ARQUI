@@ -145,25 +145,31 @@ class Core(Thread):
     def get_register_value(self, register_number):
         return self.register[register_number]
 
-    # Function to get if the memory_address block its stored on self cache
-    def get_if_mem_address_is_on_self_cache(self, memory_address):
-        return self.dataCache.get_if_mem_address_is_cached(memory_address)
-
-    # Function to get the state of the block with the memory address
-    def get_memory_address_state_on_cache(self, memory_address):
-        return self.dataCache.get_memory_address_block_state(memory_address)
-
     # Method to change state of cache block
     def change_cache_block_state(self, memory_address, new_state):
         self.dataCache.change_block_state(memory_address, new_state)
+
+    # Method to change the state on other core cache block, receives the memory address, and the new state
+    def change_block_state_on_other_core_cache(self, memory_address, new_state):
+        self.__cpu_instance.change_state_of_block_on_core_cache(not self.__core_id, memory_address, new_state)
+
+    # Function to get if the memory_address block its stored on self cache
+    def get_if_mem_address_is_on_self_cache(self, memory_address):
+        return self.dataCache.get_if_mem_address_is_cached(memory_address)
 
     # Function to get if the memory_address block its stored on other core cache
     def get_if_memory_address_on_other_cache(self, memory_address):
         return self.__cpu_instance.get_if_mem_address_is_on_core_cache(not self.__core_id, memory_address)
 
+    # Function to get the state of the block with the memory address
+    def get_memory_address_state_on_cache(self, memory_address):
+        return self.dataCache.get_memory_address_block_state(memory_address)
+
+    # Function to get the state of the block with the memory address on the other core cache
     def get_memory_address_state_on_other_cache(self, memory_address):
         return self.__cpu_instance.get_state_of_mem_address_on_core(not self.__core_id, memory_address)
 
-    # Method to change the state on other core cache block, receives the memory address, and the new state
-    def change_block_state_on_other_core_cache(self, memory_address, new_state):
-        self.__cpu_instance.change_state_of_block_on_core_cache(not self.__core_id, memory_address, new_state)
+    # Method to store the block on the cache, returns the clock cycles to store
+    # ToDo conectar con el metodo de Adrian para guardar un bloque en cache considerando el víctima
+    def store_block_on_self_cache(self, state, memory_address, data_block):
+        return self.dataCache.store_block_in_cache(state, memory_address, data_block)
