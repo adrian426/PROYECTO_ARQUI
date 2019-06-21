@@ -1,7 +1,9 @@
 import os
+import os.path as path
+
 
 # Direccion del directorio con los hilillos
-HILILLOS_PATH = r'.\Hilillos'
+HILILLOS_PATH = path.join(".", "Hilillos")
 
 
 # Metodo para obtener los archivos de texto en el directorio
@@ -16,7 +18,8 @@ def get_hilillos_files_list():
 
 # Metodo para leer un archivo y obtener el arreglo de instrucciones
 def read_hilillos(file_name):
-    file = open(HILILLOS_PATH + "\\" + file_name, "r")
+    file_path = path.join(HILILLOS_PATH, file_name)
+    file = open(file_path, "r")
     instruction_array = []
     for line in file:
         instruction = line.split()
