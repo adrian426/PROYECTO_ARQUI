@@ -97,6 +97,8 @@ class Core(Thread):
     # ToDo Se tiene que hacer un metodo que las instrucciones puedan llamar para indicarle al Core cuantos
     #  ciclos debe esperar para solicitar la siguiente instruccion y para liberar los candados
 
+    # ***********************************************LOCKS***********************************************
+
     # Method to acquire the lock of the data memory bus
     def acquire_data_bus(self):
         return self.__cpu_instance.acquire__lock(0)
@@ -133,6 +135,30 @@ class Core(Thread):
         else:
             self.__cpu_instance.release_lock(2)
 
+    # Try to acquire the self cache and data bus lock
+    def acquire_self_cache_and_data_bus_locks(self):
+        if self.acquire_self_cache():
+            if self.acquire_data_bus():
+                return True
+            else:
+                self.release_self_cache()
+        return False
+
+    # Try to acquire the self cache, other core cache, and the dara bus
+    def acquire_both_caches_and_data_bus_locks(self):
+        if self.acquire_self_cache():
+            if self.acquire_other_core_cache():
+                if self.acquire_data_bus():
+                    return True
+                else:
+                    self.release_other_core_cache()
+                    self.release_self_cache()
+            else:
+                self.release_self_cache()
+        return False
+
+    # ********************************* GET/SET registers and caches *********************************
+
     # Method to get the value of the memory address on the cache
     def get_data_cache_value(self, memory_address):
         return self.dataCache.get_word_index(memory_address)
@@ -144,6 +170,8 @@ class Core(Thread):
     # Method to get the register value, receives the register number x1 -> 1
     def get_register_value(self, register_number):
         return self.register[register_number]
+
+    # *********************************************** CACHES ***********************************************
 
     # Method to change state of cache block
     def change_cache_block_state(self, memory_address, new_state):

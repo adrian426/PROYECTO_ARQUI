@@ -46,7 +46,7 @@ class LW:
                     memory_address_to_get) != MODIFIED_BLOCK_STATE:
                 # Other core cache block isn't modified
                 # Only need to load to self cache
-                if self.acquire_self_cache_and_data_bus_locks(core_instance):
+                if core_instance.acquire_self_cache_and_data_bus_locks(core_instance):
                     # Self cache and data bus locked
                     pass
                     # ToDo charge the block to cache and check the victim block
@@ -62,24 +62,4 @@ class LW:
             # Memory address isn't in the other core
             pass
 
-    # Try to acquire the self cache and data bus lock
-    def acquire_self_cache_and_data_bus_locks(self, core_instance):
-        if core_instance.acquire_self_cache():
-            if core_instance.acquire_data_bus():
-                return True
-            else:
-                core_instance.release_self_cache()
-        return False
 
-    # Try to acquire the self cache, other core cache, and the dara bus
-    def acquire_both_caches_and_data_bus_locks(self, core_instance):
-        if core_instance.acquire_self_cache():
-            if core_instance.acquire_other_core_cache():
-                if core_instance.acquire_data_bus():
-                    return True
-                else:
-                    core_instance.release_other_core_cache()
-                    core_instance.release_self_cache()
-            else:
-                core_instance.release_self_cache()
-        return False
