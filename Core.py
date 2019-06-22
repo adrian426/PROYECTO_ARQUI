@@ -136,11 +136,6 @@ class Core(Thread):
     def increment_PC(self):
         self.PC += 4
 
-    def exec_instruction(self):
-        pass
-    # ToDo Metodo para ejecutar la instrucción, que va a llamar al decoder y a ejecutar la instruccion dependiendo
-    #  de cual es
-
     # Method to set the cycles that the core will have to wait to load next instruction and release the locks
     def set_instruction_system_clock_cycles(self, clock_cycles):
         for i in range(0, clock_cycles):
