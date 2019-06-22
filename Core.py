@@ -13,6 +13,7 @@ class Core(Thread):
     def __init__(self, cache_type: int, PCBStructure, cpu_instance, quantum_val):
         self.__core_id = cache_type
         self.__cpu_instance = cpu_instance
+        self.__finish = False
 
         # Constructor del thread
         Thread.__init__(self)
@@ -46,16 +47,47 @@ class Core(Thread):
         self.__Sub = SUB.SUB(self)
 
     def run(self):
-        for iterator in range(0, 5):
+        while self.__finish:
             self.context_switch()
             self.__cpu_instance.wait(self.__core_id)
 
             instruction_to_execute = self.get_instruction_to_execute(self.PC)
-            instruction_to_print  = str(self.hilillo_id) + " owner " + str(self.__core_id)
+            instruction_to_print = str(self.hilillo_id) + " owner " + str(self.__core_id)
             print(instruction_to_print + " instruction " + instruction_to_execute.instruction_to_string())
             # Test to execute LW instruction
             # lw_exec = LW(self, instruction_to_execute)
             # print("Iteracion # ", iterator, "del nucleo # ", self.__core_id)
+
+    def decode(self, instruction):
+        instruction_code = instruction[0]
+        if instruction_code == 19:
+            self.__addi.execute(instruction)
+        elif instruction_code == 71:
+            pass
+        elif instruction_code == 83:
+            pass
+        elif instruction_code == 72:
+            pass
+        elif instruction_code == 56:
+            pass
+        elif instruction_code == 5:
+            pass
+        elif instruction_code == 37:
+            pass
+        elif instruction_code == 99:
+            pass
+        elif instruction_code == 100:
+            pass
+        elif instruction_code == 51:
+            pass
+        elif instruction_code == 52:
+            pass
+        elif instruction_code == 111:
+            pass
+        elif instruction_code == 103:
+            pass
+        elif instruction_code == 999:
+            pass
 
     # Loads the data from the pcb, used in context switch
     def load_pcb(self):
@@ -99,10 +131,9 @@ class Core(Thread):
     #  de cual es
 
     # Method to set the cycles that the core will have to wait to load next instruction and release the locks
-    def set_instruction_system_clock_cycles(self):
-        pass
-    # ToDo Se tiene que hacer un metodo que las instrucciones puedan llamar para indicarle al Core cuantos
-    #  ciclos debe esperar para solicitar la siguiente instruccion y para liberar los candados
+    def set_instruction_system_clock_cycles(self, clock_cycles):
+        for i in range(0, clock_cycles):
+            self.__cpu_instance.wait()
 
     # ***********************************************LOCKS***********************************************
 
@@ -208,3 +239,7 @@ class Core(Thread):
     # ToDo conectar con el metodo de Adrian para guardar un bloque en cache considerando el víctima
     def store_block_on_self_cache(self, state, memory_address, data_block):
         return self.dataCache.store_block_in_cache(state, memory_address, data_block)
+
+    def finish_execution(self):
+        self.__finish = True
+
