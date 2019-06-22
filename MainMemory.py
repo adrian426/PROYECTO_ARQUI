@@ -17,6 +17,7 @@ class MainMemory:
         self.__instruction_memory = InstructionMemory()
 
         self.__data_memory.initialize_memory()
+
         # Obtiene los nombres de los hilillos
         hilillos_names = get_hilillos_files_list()
 
@@ -44,8 +45,6 @@ class MainMemory:
 
             # Se incrementa el contador de instruccion
             instruction_counter += bytes_added
-
-        # ToDo Inicializar memoria de datos
 
     # Metodo para obtener una instruccion de la memoria de instrucciones dado un PC
     def get_instruction_block(self, pc):

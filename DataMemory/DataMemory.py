@@ -7,7 +7,7 @@ class DataMemory:
 
     def initialize_memory(self):
         for i in range(0, 24):
-            self.__data_memory[i] = DataBlock()
+            self.__data_memory.append(DataBlock(1))
 
     def get_memory_block(self, block_index):
         return self.__data_memory[block_index]

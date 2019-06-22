@@ -248,8 +248,7 @@ class Core(Thread):
     def store_data_cache_block_on_main_mem(self, memory_address, cache_block_new_state):
         block_to_store = DataBlock(0)
         block_to_store.copy_data_block(self.dataCache.get_block_mem_address(memory_address))
-        # ToDo conectar con el metodo de Bailin
-        #  self.__cpu_instance.get_main_memory().store_block(memory_address, block_to_store)
+        self.__cpu_instance.get_main_memory().set_data_block(memory_address, block_to_store)
         self.change_cache_block_state(memory_address, cache_block_new_state)
         return block_to_store
 
