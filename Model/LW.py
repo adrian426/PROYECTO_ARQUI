@@ -1,6 +1,11 @@
+from DataMemory.DataBlock import DataBlock
+
 SHARED_BLOCK_STATE = "C"
 MODIFIED_BLOCK_STATE = "M"
 INVALID_BLOCK_STATE = "I"
+DATA_BUS_OPERATION_CLOCK_CYCLES = 32
+CONSULT_OTHER_CACHE_CLOCK_CYCLES = 2
+LOCK_ERROR = -1
 
 
 # Class to execute the LW instruction
@@ -31,12 +36,14 @@ class LW:
 
             if (mem_address_on_cache and mem_address_block_invalid) or not mem_address_on_cache:
                 # Not on self cache or invalid on self cache
-                total_execution_clock_cycles += self.solve_cache_miss(memory_address_to_get, core_instance)
-            # ToDo set the clock cycles on the CPU to wait
+                cache_miss_cycles_result = self.solve_cache_miss(memory_address_to_get, core_instance)
+                if cache_miss_cycles_result == LOCK_ERROR:
+                    return LOCK_ERROR
+                else:
+                    total_execution_clock_cycles += cache_miss_cycles_result
         else:
             # Can't get self cache
-            # ToDo set the clock cycles on the CPU to wait
-            return total_execution_clock_cycles
+            return LOCK_ERROR
 
         # Load the value in the register
         core_instance.set_register(destination_registry,
@@ -45,29 +52,35 @@ class LW:
         return total_execution_clock_cycles
 
     # Method to solve cache miss
-    def solve_cache_miss(self, memory_address_to_get, core_instance):
+    def solve_cache_miss(self, m_address, core_instance):
         clock_cycles = 0
-        if core_instance.get_if_memory_address_on_other_cache(memory_address_to_get):
-            # Memory address is on the other core cache
-            if core_instance.get_memory_address_state_on_other_cache(
-                    memory_address_to_get) != MODIFIED_BLOCK_STATE:
-                # Other core cache block isn't modified
-                # Only need to load to self cache
-                if core_instance.acquire_self_cache_and_data_bus_locks(core_instance):
-                    # Self cache and data bus locked
-                    pass
-                    # ToDo charge the block to cache and check the victim block
-                else:
-                    pass
-                    # ToDo notify the core to wait to the next cycle and not to load the next instruction
-            else:
-                pass
-                # The block is modified on the other core
-                # ToDo store the block on the other cache
-                #  and
+        # LOCK OTHER CORE CACHE AND DATA BUS
+        if core_instance.acquire_other_core_cache() and core_instance.acquire_data_bus():
+            # LOCKS ACQUIRED + 2 Other cache +32 Data bus
+            clock_cycles += CONSULT_OTHER_CACHE_CLOCK_CYCLES + DATA_BUS_OPERATION_CLOCK_CYCLES
+            if core_instance.get_if_memory_address_on_other_cache(m_address):
+                # Memory address is on the other core cache
+                if core_instance.get_memory_address_state_on_other_cache(
+                        m_address) == MODIFIED_BLOCK_STATE:
+                    # Other core cache block is modified
+                    # Store the other core block and get the new block
+                    data_block_to_insert = DataBlock(0)
+                    data_block_to_insert.copy_data_block(
+                        core_instance.store_other_core_data_cache_block_on_main_memory(m_address, SHARED_BLOCK_STATE))
+                    clock_cycles += core_instance.store_block_on_self_cache(
+                        SHARED_BLOCK_STATE, m_address, data_block_to_insert)
+                    return clock_cycles
+            # Memory address isn't in the other core or isn't modified
+            # LOCK RELEASED OTHER CORE CACHE
+            core_instance.release_other_core_cache()
+            # Only need to load to self cache + 32
+            main_memory_data_block = core_instance.get_data_block(m_address)
+            data_to_insert = DataBlock(0)
+            data_to_insert.copy_data_block(main_memory_data_block)
+            clock_cycles += core_instance.store_block_on_self_cache(SHARED_BLOCK_STATE, m_address, data_to_insert)
+            return clock_cycles
         else:
-            # Memory address isn't in the other core
-            pass
-        return clock_cycles
+            # Cant get the other core cache
+            return LOCK_ERROR
 
 

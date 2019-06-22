@@ -91,6 +91,11 @@ class Core(Thread):
             self.instructionCache.store_block_in_cache("C", mem_add, instruction_block)
         return self.instructionCache.get_block(self.instructionCache.get_block_index(mem_add)).get_instruction(mem_add)
 
+    # Function to get a data block from main memory
+    def get_data_block(self, mem_add):
+        # return self.__cpu_instance.get_main_memory().
+        pass
+
     def increment_PC(self):
         self.PC += 4
 
@@ -163,28 +168,6 @@ class Core(Thread):
     def release_all_locks_acquired(self):
         self.__cpu_instance
 
-    # Try to acquire the self cache and data bus lock
-    def acquire_self_cache_and_data_bus_locks(self):
-        if self.acquire_self_cache():
-            if self.acquire_data_bus():
-                return True
-            else:
-                self.release_self_cache()
-        return False
-
-    # Try to acquire the self cache, other core cache, and the dara bus
-    def acquire_both_caches_and_data_bus_locks(self):
-        if self.acquire_self_cache():
-            if self.acquire_other_core_cache():
-                if self.acquire_data_bus():
-                    return True
-                else:
-                    self.release_other_core_cache()
-                    self.release_self_cache()
-            else:
-                self.release_self_cache()
-        return False
-
     # ********************************* GET/SET registers and caches *********************************
 
     # Method to get the value of the memory address on the cache
@@ -229,3 +212,17 @@ class Core(Thread):
     # ToDo conectar con el metodo de Adrian para guardar un bloque en cache considerando el víctima
     def store_block_on_self_cache(self, state, memory_address, data_block):
         return self.dataCache.store_block_in_cache(state, memory_address, data_block)
+
+    # Method to store the cache block on main memory and change the block state
+    def store_data_cache_block_on_main_mem(self, memory_address, cache_block_new_state):
+        block_to_store = DataBlock(0)
+        block_to_store.copy_data_block(self.dataCache.get_block_mem_address(memory_address))
+        # ToDo conectar con el metodo de Bailin
+        #  self.__cpu_instance.get_main_memory().store_block(memory_address, block_to_store)
+        self.change_cache_block_state(memory_address, cache_block_new_state)
+        return block_to_store
+
+    # Method to store a block on other core cache
+    def store_other_core_data_cache_block_on_main_memory(self, memory_address, cache_block_new_state):
+        return self.__cpu_instance.store_data_cache_block_on_mm_on_core(
+            memory_address, cache_block_new_state, not self.__core_id)

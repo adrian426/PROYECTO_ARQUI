@@ -71,3 +71,10 @@ class CPU:
             return self.__core0.get_memory_address_state_on_cache(memory_address)
         else:
             return self.__core1.get_memory_address_state_on_cache(memory_address)
+
+    # Method to store the cache block of the core on the main memory
+    def store_data_cache_block_on_mm_on_core(self, memory_address, cache_block_new_state, core):
+        if core == 0:
+            return self.__core0.store_data_cache_block_on_main_mem(memory_address, cache_block_new_state)
+        else:
+            return self.__core1.store_data_cache_block_on_main_mem(memory_address, cache_block_new_state)
