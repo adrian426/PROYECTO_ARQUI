@@ -14,3 +14,4 @@ class ADDI:
         result = self.__core_instance.get_register_value(instruction[2]) \
                  + instruction[3]
         self.__core_instance.set_register(instruction[1], result)
+        self.__core_instance.set_instruction_system_clock_cycles(1)
