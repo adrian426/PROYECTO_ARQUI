@@ -65,3 +65,7 @@ class AbsCache(ABC):
     # Changes the state of the memory address in the cache.
     def change_block_state(self, memAdd, state):
         self.dataBlocksState[self.get_block_index(memAdd)] = state
+
+    # Method to get the data block
+    def get_block_mem_address(self, mem_add):
+        return self.get_block(self.get_block_index(mem_add))
