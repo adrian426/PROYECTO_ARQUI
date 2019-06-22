@@ -1,4 +1,5 @@
 from InstructionMemory.InstructionMemory import InstructionMemory
+from DataMemory.DataMemory import DataMemory
 from PCB import PCB
 from Utils.FileReader import get_hilillos_files_list, read_hilillos
 
@@ -12,9 +13,10 @@ class MainMemory:
     # Constructor
     def __init__(self, pcb_structure):
 
-        # Declara la memoria de instrucciones
+        self.__data_memory = DataMemory()
         self.__instruction_memory = InstructionMemory()
 
+        self.__data_memory.initialize_memory()
         # Obtiene los nombres de los hilillos
         hilillos_names = get_hilillos_files_list()
 
@@ -64,3 +66,10 @@ class MainMemory:
     # Metodo de prueba
     def print_instruction_block(self, block_id):
         self.__instruction_memory.print_instruction_block(block_id)
+
+    #Method to get data block from data memory
+    def get_data_block(self, mem_add):
+        return self.get_data_block(mem_add)
+
+    def set_data_block(self, mem_add, data_block):
+        self.__data_memory.store_memory_block(mem_add, data_block)
