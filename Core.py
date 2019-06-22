@@ -114,6 +114,9 @@ class Core(Thread):
         # We call the pcb load function to load the next "hilillo" to execute
         self.load_pcb()
 
+    def decrement_quantum(self):
+        self.quantum -= 1
+
     # if the instruction block is not cached, proceeds to load it.
     # Returns the instruction to be executed
     def get_instruction_to_execute(self, mem_add):
