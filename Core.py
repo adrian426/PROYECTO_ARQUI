@@ -93,7 +93,8 @@ class Core(Thread):
 
     # Function to get a data block from main memory
     def get_data_block(self, mem_add):
-        # return self.__cpu_instance.get_main_memory().
+        # ToDo Conectar con el metodo de Bailin
+        #  return elf.__cpu_instance.get_main_memory().get_data_block(memory_address)
         pass
 
     def increment_PC(self):
@@ -103,12 +104,6 @@ class Core(Thread):
         pass
     # ToDo Metodo para ejecutar la instrucción, que va a llamar al decoder y a ejecutar la instruccion dependiendo
     #  de cual es
-
-    # Method to set the cycles that the core will have to wait to load next instruction and release the locks
-    def set_instruction_system_clock_cycles(self):
-        pass
-    # ToDo Se tiene que hacer un metodo que las instrucciones puedan llamar para indicarle al Core cuantos
-    #  ciclos debe esperar para solicitar la siguiente instruccion y para liberar los candados
 
     # ***********************************************LOCKS***********************************************
 
@@ -166,7 +161,7 @@ class Core(Thread):
 
     # Method to release all core acquired locks
     def release_all_locks_acquired(self):
-        self.__cpu_instance
+        self.__cpu_instance.release_locks(self.__core_locks)
 
     # ********************************* GET/SET registers and caches *********************************
 
