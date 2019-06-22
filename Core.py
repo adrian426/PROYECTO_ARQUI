@@ -44,7 +44,7 @@ class Core(Thread):
         self.__addi = ADDI.ADDI(self)
         self.__div = DIV.DIV(self)
         self.__mul = MUL.MUL(self)
-        self.__Sub = SUB.SUB(self)
+        self.__sub = SUB.SUB(self)
 
         # Current core locks
         self.__core_locks = [0, 0, 0, 0]
@@ -64,13 +64,13 @@ class Core(Thread):
         if instruction_code == 19:
             self.__addi.execute(instruction)
         elif instruction_code == 71:
-            pass
+            self.__add.execute(instruction)
         elif instruction_code == 83:
-            pass
+            self.__sub.execute(instruction)
         elif instruction_code == 72:
-            pass
+            self.__mul.execute(instruction)
         elif instruction_code == 56:
-            pass
+            self.__div.execute(instruction)
         elif instruction_code == 5:
             pass
         elif instruction_code == 37:
