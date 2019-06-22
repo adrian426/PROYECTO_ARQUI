@@ -17,7 +17,10 @@ class Data2WACache(AbsCache):
         #  3-7 otherwise
         for index in addressRange:
             if self.dataBlockAddresses[index] == memAdd/16:
-                return True
+                if self.get_block_state(index) != "I":
+                    return True
+                else:
+                    return False
         return False
 
     @staticmethod

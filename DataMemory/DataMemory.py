@@ -1,5 +1,6 @@
 from DataMemory.DataBlock import DataBlock
 
+
 class DataMemory:
 
     def __init__(self):
