@@ -12,9 +12,9 @@ class LW:
     def execute(self, core_instance, instruction):
 
         # Set the values for the execution
-        destination_registry = instruction[1]
-        direction_registry = instruction[2]
-        direction_immediate = instruction[3]
+        destination_registry = instruction.get_instruction()[1]
+        direction_registry = instruction.get_instruction()[2]
+        direction_immediate = instruction.get_instruction()[3]
         total_execution_clock_cycles = 0
 
         # Calculate the direction of the memory address on memory
@@ -22,13 +22,21 @@ class LW:
             core_instance.get_register_value(direction_registry) + direction_immediate
 
         # Check if there is a cache miss
-        mem_address_on_cache = core_instance.get_if_mem_address_is_on_self_cache(memory_address_to_get)
-        mem_address_block_invalid = \
-            core_instance.get_memory_address_state_on_cache(memory_address_to_get) == INVALID_BLOCK_STATE
+        # LOCK SELF CACHE!!
+        if core_instance.acquire_self_cache():
+            # Get self cache
+            mem_address_on_cache = core_instance.get_if_mem_address_is_on_self_cache(memory_address_to_get)
+            mem_address_block_invalid = \
+                core_instance.get_memory_address_state_on_cache(memory_address_to_get) == INVALID_BLOCK_STATE
 
-        if (mem_address_on_cache and mem_address_block_invalid) or not mem_address_on_cache:
-            total_execution_clock_cycles += self.solve_cache_miss(memory_address_to_get, core_instance)
+            if (mem_address_on_cache and mem_address_block_invalid) or not mem_address_on_cache:
+                # Not on self cache or invalid on self cache
+                total_execution_clock_cycles += self.solve_cache_miss(memory_address_to_get, core_instance)
             # ToDo set the clock cycles on the CPU to wait
+        else:
+            # Can't get self cache
+            # ToDo set the clock cycles on the CPU to wait
+            return total_execution_clock_cycles
 
         # Load the value in the register
         core_instance.set_register(destination_registry,

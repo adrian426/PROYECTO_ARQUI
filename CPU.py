@@ -38,9 +38,10 @@ class CPU:
     def release_lock(self, lock_index):
         self.__locks[lock_index].release()
 
-    def release_locks(self, lock_indexes):
-        for index in lock_indexes:
-            self.__locks[index].release()
+    def release_locks(self, acquired_locks):
+        for index in range(0, 4):
+            if acquired_locks[index]:
+                self.__locks[index].release()
 
     def get_pcb_ds(self):
         return self.__pcb

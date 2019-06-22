@@ -11,6 +11,9 @@ class Instruction:
         # Se guarda la instruccion
         self.__instruction = instruction_array
 
+    def get_instruction(self):
+        return self.__instruction
+
     # Metodos para imprimir la instruccion
     def print_instruction(self):
         print(self.__instruction)

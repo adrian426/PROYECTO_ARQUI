@@ -45,6 +45,9 @@ class Core(Thread):
         self.__mul = MUL.MUL(self)
         self.__Sub = SUB.SUB(self)
 
+        # Current core locks
+        self.__core_locks = [0, 0, 0, 0]
+
     def run(self):
         for iterator in range(0, 5):
             self.context_switch()
@@ -53,9 +56,7 @@ class Core(Thread):
             instruction_to_execute = self.get_instruction_to_execute(self.PC)
             instruction_to_print  = str(self.hilillo_id) + " owner " + str(self.__core_id)
             print(instruction_to_print + " instruction " + instruction_to_execute.instruction_to_string())
-            # Test to execute LW instruction
-            # lw_exec = LW(self, instruction_to_execute)
-            # print("Iteracion # ", iterator, "del nucleo # ", self.__core_id)
+            # Recordar agregar release_all_locks_acquired() cuando implementemos este ciclo
 
     # Loads the data from the pcb, used in context switch
     def load_pcb(self):
@@ -108,23 +109,39 @@ class Core(Thread):
 
     # Method to acquire the lock of the data memory bus
     def acquire_data_bus(self):
-        return self.__cpu_instance.acquire__lock(0)
+        if self.__cpu_instance.acquire__lock(0):
+            self.__core_locks[0] = 1
+            return True
+        else:
+            return False
 
     # Method to acquire the lock of the instruction memory bus
     def acquire_instruction_bus(self):
-        return self.__cpu_instance.acquire__lock(1)
+        if self.__cpu_instance.acquire__lock(1):
+            self.__core_locks[1] = 1
+            return True
+        else:
+            return False
 
     # Method to acquire the lock of self cache
     def acquire_self_cache(self):
-        return self.__cpu_instance.acquire__lock(self.__core_id + 2)
+        if self.__cpu_instance.acquire__lock(self.__core_id + 2):
+            self.__core_locks[self.__core_id + 2] = 1
+            return True
+        else:
+            return False
 
     # Method to acquire the lock of the other core cache
     def acquire_other_core_cache(self):
         if self.__core_id == 0:
-            result = self.__cpu_instance.acquire__lock(3)
+            if self.__cpu_instance.acquire__lock(3):
+                self.__core_locks[3] = 1
+                return True
         else:
-            result = self.__cpu_instance.acquire__lock(2)
-        return result
+            if self.__cpu_instance.acquire__lock(2):
+                self.__core_locks[2] = 1
+                return True
+        return False
 
     # Release locks methods
     def release_data_bus(self):
@@ -141,6 +158,10 @@ class Core(Thread):
             self.__cpu_instance.release_lock(3)
         else:
             self.__cpu_instance.release_lock(2)
+
+    # Method to release all core acquired locks
+    def release_all_locks_acquired(self):
+        self.__cpu_instance
 
     # Try to acquire the self cache and data bus lock
     def acquire_self_cache_and_data_bus_locks(self):
