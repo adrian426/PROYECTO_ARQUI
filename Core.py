@@ -5,7 +5,7 @@ from InstructionMemory.Instruction import Instruction
 from Caches.InstructionsCache import InstructionsCache
 from PCB import PCB
 from threading import Thread
-from Model.LW import LW
+from Model import ADD, ADDI, DIV, LR, LW, MUL, SC, SUB, SW
 
 
 class Core(Thread):
@@ -37,6 +37,13 @@ class Core(Thread):
         self.PC = 0
         self.RL = 0
         self.quantum = quantum_val
+
+        #Se inicializa las instrucciones
+        self.__add = ADD.ADD(self)
+        self.__addi = ADDI.ADDI(self)
+        self.__div = DIV.DIV(self)
+        self.__mul = MUL.MUL(self)
+        self.__Sub = SUB.SUB(self)
 
     def run(self):
         for iterator in range(0, 5):
