@@ -68,7 +68,7 @@ class MainMemory:
 
     #Method to get data block from data memory
     def get_data_block(self, mem_add):
-        return self.get_data_block(mem_add)
+        return self.__data_memory.get_memory_block(int(mem_add/16))
 
     def set_data_block(self, mem_add, data_block):
         self.__data_memory.store_memory_block(mem_add, data_block)
