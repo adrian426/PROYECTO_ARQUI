@@ -1,8 +1,8 @@
 from DataMemory.DataBlock import DataBlock
+from StatesEnum import StatesEnum
+# from Core import Core
 
-SHARED_BLOCK_STATE = "C"
-MODIFIED_BLOCK_STATE = "M"
-INVALID_BLOCK_STATE = "I"
+
 DATA_BUS_OPERATION_CLOCK_CYCLES = 32
 CONSULT_OTHER_CACHE_CLOCK_CYCLES = 2
 LOCK_ERROR = -1
@@ -33,7 +33,7 @@ class SW:
             mem_address_on_cache = core_instance.get_if_mem_address_is_on_self_cache(mem_add_to_store)
             mem_address_state_on_cache = core_instance.get_memory_address_state_on_cache(mem_add_to_store)
             # Check if the block is shared
-            if mem_address_on_cache and mem_address_state_on_cache == SHARED_BLOCK_STATE:
+            if mem_address_on_cache and mem_address_state_on_cache == StatesEnum.SHARED:
                 # SHARED ON SELF CACHE, CHECK THE OTHER CORE
                 # LOCK OTHER CORE CACHE AND DATA BUS
                 if core_instance.acquire_other_core_cache() and core_instance.acquire_data_bus():
@@ -42,31 +42,36 @@ class SW:
                     mem_address_state_on_other_cache = core_instance.get_memory_address_state_on_other_cache(
                         mem_add_to_store)
                     # ToDo clock cycles other core
-                    if mem_address_on_other_core and mem_address_state_on_other_cache == SHARED_BLOCK_STATE:
+                    # ToDo LR a fail
+                    if mem_address_on_other_core and mem_address_state_on_other_cache == StatesEnum.SHARED:
                         # The block is shared on the other core
-                        core_instance.change_block_state_on_other_core_cache(mem_add_to_store, INVALID_BLOCK_STATE)
+                        core_instance.change_block_state_on_other_core_cache(mem_add_to_store, StatesEnum.INVALID)
                     else:
                         # The block on the other core is invalid
                         # RELEASE THE OTHER CORE CACHE
                         core_instance.release_other_core_cache()
-            # Check if the block is invalid
-            if (mem_address_on_cache and mem_address_state_on_cache == INVALID_BLOCK_STATE) or not mem_address_on_cache:
-                pass
-    #             # Not on self cache or invalid on self cache
-    #             cache_miss_cycles_result = self.solve_cache_miss(memory_address_to_get, core_instance)
-    #             if cache_miss_cycles_result == LOCK_ERROR:
-    #                 return LOCK_ERROR
-    #             else:
-    #                 total_execution_clock_cycles += cache_miss_cycles_result
-    #     else:
-    #         # Can't get self cache
-    #         return LOCK_ERROR
-    #
-    #     # Load the value in the register
-    #     core_instance.set_register(destination_registry,
-    #                                core_instance.get_data_cache_value(memory_address_to_get))
-    #     # Returns the execution time
-    #     return total_execution_clock_cycles
+                else:
+                    # Can't get the locks
+                    return LOCK_ERROR
+            # Check if the block is invalid or not in self cache
+            if (mem_address_on_cache and mem_address_state_on_cache == StatesEnum.INVALID) or not mem_address_on_cache:
+                # Not on self cache or invalid on self cache
+                cache_miss_cycles_result = self.solve_cache_miss(mem_add_to_store, core_instance)
+                if cache_miss_cycles_result == LOCK_ERROR:
+                    return LOCK_ERROR
+                else:
+                    total_execution_clock_cycles += cache_miss_cycles_result
+        else:
+            # Can't get self cache
+            return LOCK_ERROR
+
+        # Store the value in the register
+        value_to_store = core_instance.get_register_value(source_registry)
+        core_instance.set_data_block_main_memory()
+        # core_instance.set_register(destination_registry,
+        #                            core_instance.get_data_cache_value(memory_address_to_get))
+        # Returns the execution time
+        return total_execution_clock_cycles
     #
     # # Method to solve cache miss
     # def solve_cache_miss(self, m_address, core_instance):
