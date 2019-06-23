@@ -13,19 +13,23 @@ class CPU:
         #Hay que preguntar para que ingresen en valor del quantum
         self.__core0 = Core(0, self.__pcb, self, 16)
         self.__core1 = Core(1, self.__pcb, self, 16)
-
         self.__system_clock = 0
+        self.__core_finished = False
 
         # bus datos, bus instrucciones, cache 0, cache 1
         self.__locks = [Lock(), Lock(), Lock(), Lock()]
 
     # Metodo para la barrera e incrementar el relog del sistema
-    def wait(self, core_id):
-        # print("Waiting", core_id)
-        barrier_thread_id = self.threads_barrier.wait()
-        # print(barrier_thread_id)
-        if barrier_thread_id == 0:
+    def wait(self):
+        if self.__core_finished == False:
+            # print("Waiting", core_id)
+            barrier_thread_id = self.threads_barrier.wait()
+            # print(barrier_thread_id)
+            if barrier_thread_id == 0:
+                self.__system_clock += 1
+        else:
             self.__system_clock += 1
+
 
     # Se inician los cores
     def start_cores(self):

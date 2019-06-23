@@ -52,12 +52,12 @@ class Core(Thread):
     def run(self):
         while self.__finish == False:
             self.context_switch()
-            self.__cpu_instance.wait(self.__core_id)
-
-            instruction_to_execute = self.get_instruction_to_execute(self.PC)
-            instruction_to_print = str(self.hilillo_id) + " owner " + str(self.__core_id)
-            print(instruction_to_print + " instruction " + instruction_to_execute.instruction_to_string())
-            # Recordar agregar release_all_locks_acquired() cuando implementemos este ciclo
+            while self.quantum != 0:
+                self.__cpu_instance.wait(self.__core_id)
+                instruction_to_execute = self.get_instruction_to_execute(self.PC)
+                instruction_to_print = str(self.hilillo_id) + " owner " + str(self.__core_id)
+                print(instruction_to_print + " instruction " + instruction_to_execute.instruction_to_string())
+                # Recordar agregar release_all_locks_acquired() cuando implementemos este ciclo
 
     def decode(self, instruction):
         instruction_code = instruction[0]
