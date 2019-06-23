@@ -8,8 +8,10 @@ class DataFACache(AbsCache):
         AbsCache.__init__(self, blockContent)
 
     def get_if_mem_address_is_cached(self, memAdd):
-        if self.dataBlocksAddress[self.get_block_index(memAdd)] == int(memAdd/16):
-            return True
+        block_index = self.get_block_index(memAdd)
+        if self.dataBlocksAddress[block_index] == int(memAdd/16):
+            if self.get_block_state(block_index) != "I":
+                return True
         return False
 
     def get_block_index(self, memAdd):

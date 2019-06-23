@@ -17,8 +17,7 @@ class InstructionsCache(AbsCache):
 
     # In this case, data is referring to the instruction
     def get_word_from_cached_block(self, memAdd):
-        #ESTO LO HAY QUE INTEGRAR CON LA INSTRUCCION DE ARIEL
-        return self.dataBlocksLoaded[self.get_block_index(memAdd)][self.getDataIndex(memAdd)]
+        return self.dataBlocksLoaded[self.get_block_index(memAdd)].get_instruction(memAdd)
 
     def store_block_in_cache(self, state, memAdd, dataBlock):
         targetBlock = self.get_block_index(memAdd)

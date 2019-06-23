@@ -5,6 +5,7 @@ from InstructionMemory.Instruction import Instruction
 from Caches.InstructionsCache import InstructionsCache
 from PCB import PCB
 from threading import Thread
+from StatesEnum import StatesEnum
 from Model import ADD, ADDI, DIV, LR, LW, MUL, SC, SUB, SW
 
 
@@ -51,9 +52,9 @@ class Core(Thread):
 
     def run(self):
         while self.__finish == False:
-            self.context_switch()
+            self.context_switch(False)
             while self.quantum != 0:
-                self.__cpu_instance.wait(self.__core_id)
+                self.__cpu_instance.wait()
                 instruction_to_execute = self.get_instruction_to_execute(self.PC)
                 instruction_to_print = str(self.hilillo_id) + " owner " + str(self.__core_id)
                 print(instruction_to_print + " instruction " + instruction_to_execute.instruction_to_string())
@@ -99,15 +100,15 @@ class Core(Thread):
             self.PC = pcb.get_pc_address()
             self.hilillo_id = pcb.get_hilillo_id()
 
-    def context_switch(self):
+    def context_switch(self, instruction_ended):
         # No se si se manda PC, depende donde se aumente.
         pcb = PCB(self.hilillo_id, self.PC, self.register)
 
         # hay que ver si esto funca con la instruccion fin, me parece que no
         # if it's not the first iteration, doesn't store the init value of the core
-        if self.hilillo_id != -1:
+        if self.hilillo_id != -1: #TODO: NO ME ACUERDO PORQUE ERA ESTO, CREO QUE NO FUNCA
             # if the quantum hasn't ended, the PCB is added again to the queue.
-            if self.quantum != 0:
+            if not instruction_ended:
                 self.__cpu_instance.get_pcb_ds().queuePCB(pcb)
             else:
                 self.__cpu_instance.get_pcb_ds().queueFinishedPCB(pcb)
@@ -243,16 +244,23 @@ class Core(Thread):
         return self.__cpu_instance.get_state_of_mem_address_on_core(not self.__core_id, memory_address)
 
     # Method to store the block on the cache, returns the clock cycles to store
-    # ToDo conectar con el metodo de Adrian para guardar un bloque en cache considerando el víctima
     def store_block_on_self_cache(self, state, memory_address, data_block):
-        return self.dataCache.store_block_in_cache(state, memory_address, data_block)
+        target_block_index = self.dataCache.get_target_block_index(memory_address)
+        miss = False
+        if self.dataCache.get_block_state(target_block_index) == StatesEnum.MODIFIED:
+            self.store_data_cache_block_on_main_mem(self.dataCache.get_block_address(target_block_index), state)
+            miss = True
+        self.dataCache.store_block_in_cache(state, memory_address, data_block)
+        if miss:
+            return 32
+        else:
+            return 0
 
     # Method to store the cache block on main memory and change the block state
     def store_data_cache_block_on_main_mem(self, memory_address, cache_block_new_state):
         block_to_store = DataBlock(0)
         block_to_store.copy_data_block(self.dataCache.get_block_mem_address(memory_address))
-        # ToDo conectar con el metodo de Bailin
-        #  self.__cpu_instance.get_main_memory().store_block(memory_address, block_to_store)
+        self.__cpu_instance.get_main_memory().set_data_block(memory_address, block_to_store)
         self.change_cache_block_state(memory_address, cache_block_new_state)
         return block_to_store
 
