@@ -19,7 +19,7 @@ class Core(Thread):
         # Constructor del thread
         Thread.__init__(self)
 
-        # Se crea le bloque de datos que se le va a apasar a todos los bloques
+        # Se crea le bloque de datos que se le va a a pasar a todos los bloques
         data_block = DataBlock(0)
 
         # Dependiendo del tipo de cache se inicializa
@@ -52,7 +52,7 @@ class Core(Thread):
 
     def run(self):
         while self.__finish == False:
-            self.context_switch(False) #TODO: MANEJAR LA INSTRUCCION FIN.
+            self.context_switch(False)  # TODO: MANEJAR LA INSTRUCCION FIN.
             self.__cpu_instance.wait(self.__core_id)
 
             instruction_to_execute = self.get_instruction_to_execute(self.PC)
