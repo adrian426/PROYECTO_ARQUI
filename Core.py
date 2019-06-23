@@ -19,7 +19,7 @@ class Core(Thread):
         # Constructor del thread
         Thread.__init__(self)
 
-        # Se crea le bloque de datos que se le va a apasar a todos los bloques
+        # Se crea le bloque de datos que se le va a a pasar a todos los bloques
         data_block = DataBlock(0)
 
         # Dependiendo del tipo de cache se inicializa
