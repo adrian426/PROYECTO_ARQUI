@@ -10,6 +10,7 @@ from Model import ADD, ADDI, DIV, LR, LW, MUL, SC, SUB, SW, JAL, JALR, BNE, BEQ
 
 INVALID_RL_VALUE = -1
 
+
 class Core(Thread):
 
     def __init__(self, cache_type: int, PCBStructure, cpu_instance, quantum_val):
@@ -42,7 +43,7 @@ class Core(Thread):
         self.quantum = quantum_val
         self.inc_pc = True
 
-        #Se inicializa las instrucciones
+        # Se inicializa las instrucciones
         self.__add = ADD.ADD(self)
         self.__addi = ADDI.ADDI(self)
         self.__div = DIV.DIV(self)
@@ -52,6 +53,10 @@ class Core(Thread):
         self.__jalr = JALR.JALR(self)
         self.__bne = BNE.BNE(self)
         self.__beq = BEQ.BEQ(self)
+        self.__lw = LW.LW(self)
+        self.__sw = SW.SW(self)
+        self.__lr = LR.LR(self)
+        self.__sc = SC.SC(self)
 
         # Current core locks
         self.__core_locks = [0, 0, 0, 0]
@@ -79,17 +84,17 @@ class Core(Thread):
         elif instruction_code == 56:
             self.__div.execute(instruction)
         elif instruction_code == 5:
-            pass
+            self.__lw.execute(instruction)
         elif instruction_code == 37:
-            pass
+            self.__sw.execute(instruction)
         elif instruction_code == 99:
             self.__beq.execute(instruction)
         elif instruction_code == 100:
             self.__bne.execute(instruction)
         elif instruction_code == 51:
-            pass
+            self.__lr.execute(instruction)
         elif instruction_code == 52:
-            pass
+            self.__sc.execute(instruction)
         elif instruction_code == 111:
             self.__jal.execute(instruction)
         elif instruction_code == 103:
@@ -304,6 +309,10 @@ class Core(Thread):
         self.dataCache.get_block_mem_address(mem_address).change_word_value(mem_address, value)
 
     # **********************************************RL**********************************************
+    # Method to get the RL
+    def get_self_rl(self):
+        return self.RL
+
     # Method to invalidate RL core
     def invalidate_self_rl(self, mem_add):
         if self.RL == mem_add:
