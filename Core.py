@@ -128,11 +128,8 @@ class Core(Thread):
         return self.instructionCache.get_block(self.instructionCache.get_block_index(mem_add)).get_instruction(mem_add)
 
     # Function to get a data block from main memory
-    def get_data_block(self, mem_add):
-        if not self.dataCache.get_if_mem_address_is_cached(mem_add):
-            data_block = self.__cpu_instance.get_main_memory().get_data_block(mem_add)
-            self.dataCache.store_block_in_cache("C", mem_add, data_block)
-        return self.dataCache.get_block(self.dataCache.get_block_index(mem_add))
+    def get_data_block(self, mem_add): 
+        return self.__cpu_instance.get_main_memory().get_data_block(mem_add)
 
     def set_data_block_main_memory(self, mem_add, data_block):
         self.__cpu_instance.get_main_memory().set_data_block(mem_add, data_block)
