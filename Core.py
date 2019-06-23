@@ -128,7 +128,7 @@ class Core(Thread):
         return self.instructionCache.get_block(self.instructionCache.get_block_index(mem_add)).get_instruction(mem_add)
 
     # Function to get a data block from main memory
-    def get_data_block(self, mem_add): 
+    def get_data_block(self, mem_add):
         return self.__cpu_instance.get_main_memory().get_data_block(mem_add)
 
     def set_data_block_main_memory(self, mem_add, data_block):
