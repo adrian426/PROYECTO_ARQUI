@@ -48,7 +48,10 @@ class SW:
                     total_execution_clock_cycles += CONSULT_OTHER_CACHE_CLOCK_CYCLES
                     if mem_address_on_other_core and mem_address_state_on_other_cache == StatesEnum.SHARED:
                         # The block is shared on the other core
-                        self.__core_instance.change_block_state_on_other_core_cache(mem_add_to_store, StatesEnum.INVALID)
+                        self.__core_instance.change_block_state_on_other_core_cache(
+                            mem_add_to_store, StatesEnum.INVALID)
+                        # Invalidate the RL on the other core, in the case that it was using a lr
+                        self.__core_instance.invalidate_other_core_rl(mem_add_to_store)
                     else:
                         # The block on the other core is invalid
                         # RELEASE THE OTHER CORE CACHE
@@ -89,6 +92,10 @@ class SW:
                 data_block_to_insert.copy_data_block(
                     self.__core_instance.store_other_core_data_cache_block_on_main_memory(
                         m_address, StatesEnum.INVALID))
+
+                # Invalidate the RL on the other core, in the case that it was using a lr
+                self.__core_instance.invalidate_other_core_rl(m_address)
+
                 clock_cycles += self.__core_instance.store_block_on_self_cache(
                     StatesEnum.SHARED, m_address, data_block_to_insert)
                 return clock_cycles

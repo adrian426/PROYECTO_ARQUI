@@ -82,3 +82,10 @@ class CPU:
             return self.__core0.store_data_cache_block_on_main_mem(memory_address, cache_block_new_state)
         else:
             return self.__core1.store_data_cache_block_on_main_mem(memory_address, cache_block_new_state)
+
+    # Method to invalidate RL on core, assumes that core has both cores and data bus locks
+    def invalidate_rl_on_core(self, mem_address, core):
+        if core == 0:
+            return self.__core0.invalidate_self_rl(mem_address)
+        else:
+            return self.__core1.invalidate_self_rl(mem_address)

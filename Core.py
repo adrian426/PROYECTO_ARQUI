@@ -8,6 +8,7 @@ from threading import Thread
 from StatesEnum import StatesEnum
 from Model import ADD, ADDI, DIV, LR, LW, MUL, SC, SUB, SW, JAL, JALR, BNE, BEQ
 
+INVALID_RL_VALUE = -1
 
 class Core(Thread):
 
@@ -302,10 +303,19 @@ class Core(Thread):
     def change_word_value_data_cache(self, mem_address, value):
         self.dataCache.get_block_mem_address(mem_address).change_word_value(mem_address, value)
 
-    # **********************************************RL*****************************************
+    # **********************************************RL**********************************************
     # Method to invalidate RL core
-    # def invalidate_self_rl(self, mem_add):
+    def invalidate_self_rl(self, mem_add):
+        if self.RL == mem_add:
+            self.RL = INVALID_RL_VALUE
 
+    # Method to set the value of RL (for lr)
+    def set_self_rl(self, mem_add):
+        self.RL = mem_add
+
+    # Method to invalidate RL on the other core
+    def invalidate_other_core_rl(self, mem_add):
+        self.__cpu_instance.invalidate_rl_on_core(mem_add, not self.__core_id)
 
     def finish_execution(self):
         self.__finish = True
