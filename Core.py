@@ -6,7 +6,7 @@ from Caches.InstructionsCache import InstructionsCache
 from PCB import PCB
 from threading import Thread
 from StatesEnum import StatesEnum
-from Model import ADD, ADDI, DIV, LR, LW, MUL, SC, SUB, SW
+from Model import ADD, ADDI, DIV, LR, LW, MUL, SC, SUB, SW, JAL, JALR, BNE, BEQ
 
 
 class Core(Thread):
@@ -39,6 +39,7 @@ class Core(Thread):
         self.PC = 0
         self.RL = 0
         self.quantum = quantum_val
+        self.inc_pc = True
 
         #Se inicializa las instrucciones
         self.__add = ADD.ADD(self)
@@ -46,6 +47,10 @@ class Core(Thread):
         self.__div = DIV.DIV(self)
         self.__mul = MUL.MUL(self)
         self.__sub = SUB.SUB(self)
+        self.__jal = JAL.JAL(self)
+        self.__jalr = JALR.JALR(self)
+        self.__bne = BNE.BNE(self)
+        self.__beq = BEQ.BEQ(self)
 
         # Current core locks
         self.__core_locks = [0, 0, 0, 0]
@@ -77,17 +82,17 @@ class Core(Thread):
         elif instruction_code == 37:
             pass
         elif instruction_code == 99:
-            pass
+            self.__beq.execute(instruction)
         elif instruction_code == 100:
-            pass
+            self.__bne.execute(instruction)
         elif instruction_code == 51:
             pass
         elif instruction_code == 52:
             pass
         elif instruction_code == 111:
-            pass
+            self.__jal.execute(instruction)
         elif instruction_code == 103:
-            pass
+            self.__jalr.execute(instruction)
         elif instruction_code == 999:
             pass
 
@@ -134,8 +139,20 @@ class Core(Thread):
     def set_data_block_main_memory(self, mem_add, data_block):
         self.__cpu_instance.get_main_memory().set_data_block(mem_add, data_block)
 
-    def increment_PC(self):
-        self.PC += 4
+    # If inc_pc is false, the pc is not incremented because it was already done by the instructions
+    # beq, bne, jal and jalr
+    def increment_PC_default(self):
+        if self.inc_pc:
+            self.PC += 4
+        self.inc_pc = True # the value is reseted
+
+    # Used by beq, bne, jal and jalr to change where the PC should point
+    def change_PC_by_instruction(self, mem_address):
+        self.PC = mem_address
+        self.inc_pc = False
+
+    def get_PC(self):
+        return self.PC
 
     # Method to set the cycles that the core will have to wait to load next instruction and release the locks
     def set_instruction_system_clock_cycles(self, clock_cycles):
