@@ -200,22 +200,36 @@ class Core(Thread):
     # Release locks methods
     def release_data_bus(self):
         self.__cpu_instance.release_lock(0)
+        self.__core_locks[0] = 0
 
     def release_instruction_bus(self):
         self.__cpu_instance.release_lock(1)
+        self.__core_locks[1] = 0
 
     def release_self_cache(self):
         self.__cpu_instance.release_lock(self.__core_id + 2)
+        self.__core_locks[self.__core_id + 2] = 0
 
     def release_other_core_cache(self):
         if self.__core_id == 0:
             self.__cpu_instance.release_lock(3)
+            self.__core_locks[3] = 0
         else:
             self.__cpu_instance.release_lock(2)
+            self.__core_locks[2] = 0
 
     # Method to release all core acquired locks
     def release_all_locks_acquired(self):
         self.__cpu_instance.release_locks(self.__core_locks)
+
+    # Try to acquire other core cache, and the data bus
+    def acquire_other_and_data_bus_locks(self):
+        if self.acquire_other_core_cache():
+            if self.acquire_data_bus():
+                return True
+            else:
+                self.release_other_core_cache()
+        return False
 
     # ********************************* GET/SET registers and caches *********************************
 
@@ -282,6 +296,16 @@ class Core(Thread):
     def store_other_core_data_cache_block_on_main_memory(self, memory_address, cache_block_new_state):
         return self.__cpu_instance.store_data_cache_block_on_mm_on_core(
             memory_address, cache_block_new_state, not self.__core_id)
+
+    # Method to store a value in a data cache block with a memory address
+    # Assumes that the block its on cache
+    def change_word_value_data_cache(self, mem_address, value):
+        self.dataCache.get_block_mem_address(mem_address).change_word_value(mem_address, value)
+
+    # **********************************************RL*****************************************
+    # Method to invalidate RL core
+    # def invalidate_self_rl(self, mem_add):
+
 
     def finish_execution(self):
         self.__finish = True
