@@ -48,7 +48,6 @@ class AbsCache(ABC):
     def get_word_index(memAdd):
         return int((memAdd % 16) / 4)
 
-    @staticmethod
     def get_block_state(self, index):
         return self.dataBlocksState[index]
 

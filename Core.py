@@ -43,7 +43,6 @@ class Core(Thread):
         self.PC = 0
         self.RL = 0
         self.quantum = 0
-        self.inc_pc = True
 
         # Se inicializa las instrucciones
         self.__add = ADD.ADD(self)
@@ -69,6 +68,9 @@ class Core(Thread):
             while self.quantum != 0:
                 self.__cpu_instance.wait()
                 instruction_to_execute = self.get_instruction_to_execute(self.PC)
+                self.increment_PC_default()
+                if len(instruction_to_execute.get_instruction()) == 0:
+                    print(self.PC)
                 instruction_to_print = str(self.hilillo_id) + " owner " + str(self.__core_id)
                 self.decode(instruction_to_execute)
                 self.decrease_quantum()
@@ -137,7 +139,8 @@ class Core(Thread):
             self.finish_execution()
 
     def decrease_quantum(self):
-        self.quantum -= 1
+        if self.quantum > 0:
+            self.quantum -= 1
 
     # if the instruction block is not cached, proceeds to load it.
     # Returns the instruction to be executed
@@ -158,14 +161,11 @@ class Core(Thread):
     # If inc_pc is false, the pc is not incremented because it was already done by the instructions
     # beq, bne, jal and jalr
     def increment_PC_default(self):
-        if self.inc_pc:
-            self.PC += 4
-        self.inc_pc = True # the value is reseted
+        self.PC += 4
 
     # Used by beq, bne, jal and jalr to change where the PC should point
-    def change_PC_by_instruction(self, mem_address):
-        self.PC = mem_address
-        self.inc_pc = False
+    def change_PC_by_instruction(self, mem_address_to_point):
+        self.PC = mem_address_to_point
 
     def get_PC(self):
         return self.PC

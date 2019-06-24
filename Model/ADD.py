@@ -15,4 +15,4 @@ class ADD:
                  + self.__core_instance.get_register_value(instruction.get_instruction()[3])
         self.__core_instance.set_register(instruction.get_instruction()[1], result)
         self.__core_instance.set_instruction_system_clock_cycles(1)
-        self.__core_instance.decrement_quantum()
+        self.__core_instance.decrease_quantum()

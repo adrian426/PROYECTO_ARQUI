@@ -16,4 +16,7 @@ class JALR:
         # register2 <- PC
         self.__core_instance.set_register(instruction.get_instruction()[1], current_pc)
         # PC = PC + inmediate
-        self.__core_instance.change_PC_by_instruction(instruction.get_instruction()[2] + instruction.get_instruction()[3])
+        new_pc = instruction.get_instruction()[2] + instruction.get_instruction()[3]
+        print(str(self.__core_instance.get_PC()) + "" + new_pc)
+        self.__core_instance.change_PC_by_instruction(new_pc)
+        self.__core_instance.decrease_quantum()

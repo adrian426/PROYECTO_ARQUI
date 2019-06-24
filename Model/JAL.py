@@ -17,3 +17,4 @@ class JAL:
         self.__core_instance.set_register(instruction.get_instruction()[1], current_pc)
         # PC = PC + inmediate
         self.__core_instance.change_PC_by_instruction(current_pc + instruction.get_instruction()[3])
+        self.__core_instance.decrease_quantum()

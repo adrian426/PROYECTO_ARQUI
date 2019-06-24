@@ -48,7 +48,7 @@ class InstructionMemory:
             raise TypeError("Se recibio un PC que no es multiplo de 4")
         # Se revisa que el bloque exista
         if pc_function >= self.__next_word:
-            raise TypeError("Se solicito una instruccion que no existe")
+            raise TypeError("Se solicito una instruccion que no existe, direccion: " + str(pc))
         # Se revisa que sea mayor igual a 0
         if pc_function < 0:
             raise TypeError("El PC solicitado no corresponde a una direccion de la memoria de instrucciones")
@@ -65,7 +65,7 @@ class InstructionMemory:
             raise TypeError("Se recibio un PC que no es multiplo de 4")
         # Se revisa que el bloque exista
         if pc_function >= self.__next_word:
-            raise TypeError("Se solicito una instruccion que no existe")
+            raise TypeError("Se solicito una instruccion que no existe, direccion: " + str(pc))
         # Se revisa que sea mayor igual a 0
         if pc_function < 0:
             raise TypeError("El PC solicitado no corresponde a una direccion de la memoria de instrucciones")

@@ -17,3 +17,4 @@ class BNE:
         r2 = self.__core_instance.get_register_value(instruction.get_instruction()[2])
         if r1 != r2:
             self.__core_instance.change_PC_by_instruction(current_pc + (instruction.get_instruction()[3] * 4))
+        self.__core_instance.decrease_quantum()
