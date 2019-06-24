@@ -74,6 +74,7 @@ class Core(Thread):
                 self.decode(instruction_to_execute)
                 self.decrease_quantum()
                 self.set_instruction_system_clock_cycles(1)
+                self.release_all_locks_acquired()
                 print(instruction_to_print + " instruction " + instruction_to_execute.instruction_to_string())
                 # Recordar agregar release_all_locks_acquired() cuando implementemos este ciclo
 
