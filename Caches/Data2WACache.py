@@ -26,7 +26,7 @@ class Data2WACache(AbsCache):
     @staticmethod
     #  Returns the way assigned to the memory Address received as parameter.
     def get_block_way(memAdd):
-        return (memAdd / 16) % 2
+        return int(memAdd / 16) % 2
 
     @staticmethod
     def get_way_range(way):
@@ -39,7 +39,7 @@ class Data2WACache(AbsCache):
         way = self.get_block_way(memAdd)
         addressRange = self.get_way_range(way)
         for index in addressRange:
-            if self.dataBlocksAddress[index] == memAdd / 16:
+            if self.dataBlocksAddress[index] == int(memAdd / 16):
                 return index
 
     def get_word_from_cached_block(self, memAdd):
@@ -53,7 +53,7 @@ class Data2WACache(AbsCache):
         else:
             way = 0
         self.dataBlocksLoaded[targetBlock] = dataBlock
-        self.dataBlocksAddress[targetBlock] = memAdd/16 # Store the block address
+        self.dataBlocksAddress[targetBlock] = int(memAdd/16) # Store the block address
         self.change_block_state(memAdd, state)
         self.augment_way_fifo_index(way)
 

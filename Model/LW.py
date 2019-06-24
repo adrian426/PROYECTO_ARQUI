@@ -32,11 +32,19 @@ class LW:
         if self.__core_instance.acquire_self_cache():
             # Get self cache
             mem_address_on_cache = self.__core_instance.get_if_mem_address_is_on_self_cache(memory_address_to_get)
-            mem_address_block_invalid = \
-                self.__core_instance.get_memory_address_state_on_cache(memory_address_to_get) == StatesEnum.INVALID
 
-            if (mem_address_on_cache and mem_address_block_invalid) or not mem_address_on_cache:
-                # Not on self cache or invalid on self cache
+            if mem_address_on_cache:
+                mem_address_block_invalid = \
+                    self.__core_instance.get_memory_address_state_on_cache(memory_address_to_get) == StatesEnum.INVALID
+                if mem_address_block_invalid:
+                    # Invalid on self cache
+                    cache_miss_cycles_result = self.solve_cache_miss(memory_address_to_get)
+                    if cache_miss_cycles_result == LOCK_ERROR:
+                        return LOCK_ERROR
+                    else:
+                        total_execution_clock_cycles += cache_miss_cycles_result
+            else:
+                # Not on self cache
                 cache_miss_cycles_result = self.solve_cache_miss(memory_address_to_get)
                 if cache_miss_cycles_result == LOCK_ERROR:
                     return LOCK_ERROR
