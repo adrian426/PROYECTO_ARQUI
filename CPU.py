@@ -10,10 +10,11 @@ class CPU:
         self.__pcb = PCBDataStructure()
         self.threads_barrier = Barrier(2)
         self.__system_main_memory = MainMemory(self.__pcb)
-        #Hay que preguntar para que ingresen en valor del quantum
-        self.__core0 = Core(0, self.__pcb, self, 16)
-        self.__core1 = Core(1, self.__pcb, self, 16)
+        # Hay que preguntar para que ingresen en valor del quantum
+        self.__core0 = Core(0, self)
+        self.__core1 = Core(1, self)
         self.__system_clock = 0
+        self.__default_quantum = 20
         self.__core_finished = False
 
         # bus datos, bus instrucciones, cache 0, cache 1
@@ -21,7 +22,7 @@ class CPU:
 
     # Metodo para la barrera e incrementar el relog del sistema
     def wait(self):
-        if self.__core_finished == False:
+        if not self.__core_finished:
             # print("Waiting", core_id)
             barrier_thread_id = self.threads_barrier.wait()
             # print(barrier_thread_id)
@@ -29,7 +30,6 @@ class CPU:
                 self.__system_clock += 1
         else:
             self.__system_clock += 1
-
 
     # Se inician los cores
     def start_cores(self):
@@ -89,3 +89,11 @@ class CPU:
             return self.__core0.invalidate_self_rl(mem_address)
         else:
             return self.__core1.invalidate_self_rl(mem_address)
+
+    # Method to set core finished bool to true
+    def notify_core_finished(self):
+        self.__core_finished = True
+
+    # Method to get the default quantum
+    def get_default_quantum(self):
+        return self.__default_quantum

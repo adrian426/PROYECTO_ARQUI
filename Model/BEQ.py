@@ -13,7 +13,7 @@ class BEQ:
     # Start the execution
     def execute(self, instruction):
         current_pc = self.__core_instance.get_PC()
-        r1 = self.__core_instance.get_register_value(instruction[1])
-        r2 = self.__core_instance.get_register_value(instruction[2])
+        r1 = self.__core_instance.get_register_value(instruction.get_instruction()[1])
+        r2 = self.__core_instance.get_register_value(instruction.get_instruction()[2])
         if r1 == r2:
-            self.__core_instance.change_PC_by_instruction(current_pc + (instruction[3] * 4))
+            self.__core_instance.change_PC_by_instruction(current_pc + (instruction.get_instruction()[3] * 4))

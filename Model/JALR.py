@@ -14,6 +14,6 @@ class JALR:
     def execute(self, instruction):
         current_pc = self.__core_instance.get_PC()
         # register2 <- PC
-        self.__core_instance.set_register(instruction[1], current_pc)
+        self.__core_instance.set_register(instruction.get_instruction()[1], current_pc)
         # PC = PC + inmediate
-        self.__core_instance.change_PC_by_instruction(instruction[2] + instruction[3])
+        self.__core_instance.change_PC_by_instruction(instruction.get_instruction()[2] + instruction.get_instruction()[3])

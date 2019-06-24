@@ -21,8 +21,12 @@ def read_hilillos(file_name):
     file_path = path.join(HILILLOS_PATH, file_name)
     file = open(file_path, "r")
     instruction_array = []
+    instruction_int = []
     for line in file:
         instruction = line.split()
-        instruction_array.append(instruction)
+        for inst in instruction:
+            instruction_int.append(int(inst))
+        instruction_array.append(instruction_int)
+        instruction_int = []
     file.close()
     return instruction_array

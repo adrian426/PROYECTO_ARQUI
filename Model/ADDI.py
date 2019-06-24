@@ -11,8 +11,8 @@ class ADDI:
 
     # Start the execution
     def execute(self, instruction):
-        result = self.__core_instance.get_register_value(instruction[2]) \
-                 + instruction[3]
-        self.__core_instance.set_register(instruction[1], result)
+        result = self.__core_instance.get_register_value(instruction.get_instruction()[2]) \
+                 + instruction.get_instruction()[3]
+        self.__core_instance.set_register(instruction.get_instruction()[1], result)
         self.__core_instance.set_instruction_system_clock_cycles(1)
         self.__core_instance.decrement_quantum()

@@ -14,6 +14,6 @@ class JAL:
     def execute(self, instruction):
         current_pc = self.__core_instance.get_PC()
         # register1 <- PC
-        self.__core_instance.set_register(instruction[1], current_pc)
+        self.__core_instance.set_register(instruction.get_instruction()[1], current_pc)
         # PC = PC + inmediate
-        self.__core_instance.change_PC_by_instruction(current_pc + instruction[3])
+        self.__core_instance.change_PC_by_instruction(current_pc + instruction.get_instruction()[3])
