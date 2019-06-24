@@ -18,7 +18,7 @@ class Core(Thread):
         self.__cpu_instance = cpu_instance
 
         # Core execution finished
-        self.__finish = False
+        self.__finished = False
 
         # Constructor del thread
         Thread.__init__(self)
@@ -43,6 +43,7 @@ class Core(Thread):
         self.PC = 0
         self.RL = 0
         self.quantum = 0
+        self.__hilillo_finished = True
 
         # Se inicializa las instrucciones
         self.__add = ADD.ADD(self)
@@ -63,22 +64,20 @@ class Core(Thread):
         self.__core_locks = [0, 0, 0, 0]
 
     def run(self):
-        while not self.__finish:
-            self.context_switch(False)
-            while self.quantum != 0:
+        while not self.__finished:
+            self.context_switch()
+            while self.quantum != 0 and self.__hilillo_finished:
                 self.__cpu_instance.wait()
                 instruction_to_execute = self.get_instruction_to_execute(self.PC)
-                self.increment_PC_default()
-                if len(instruction_to_execute.get_instruction()) == 0:
-                    print(self.PC)
+                self.increment_PC_default() # increment of the PC after geting the instruction to execute
                 instruction_to_print = str(self.hilillo_id) + " owner " + str(self.__core_id)
                 self.decode(instruction_to_execute)
                 self.decrease_quantum()
                 self.set_instruction_system_clock_cycles(1)
-                self.increment_PC_default()
                 print(instruction_to_print + " instruction " + instruction_to_execute.instruction_to_string())
                 # Recordar agregar release_all_locks_acquired() cuando implementemos este ciclo
 
+    #decodes and execute the instruction pointed by the PC
     def decode(self, instruction):
         instruction_code = int(instruction.get_instruction()[0])
         if instruction_code == 19:
@@ -108,7 +107,8 @@ class Core(Thread):
         elif instruction_code == 103:
             self.__jalr.execute(instruction)
         elif instruction_code == 999:
-            pass
+            if(self.quantum > 0):
+                self.__hilillo_finished = False
 
     # Loads the data from the pcb, used in context switch
     def load_pcb(self):
@@ -122,7 +122,7 @@ class Core(Thread):
             return True
         return False
 
-    def context_switch(self, instruction_ended):
+    def context_switch(self):
         # No se si se manda PC, depende donde se aumente.
         pcb = PCB(self.hilillo_id, self.PC, self.register)
 
@@ -130,10 +130,11 @@ class Core(Thread):
         # if it's not the first iteration, doesn't store the init value of the core
         if self.hilillo_id != -1:
             # if the quantum hasn't ended, the PCB is added again to the queue.
-            if not instruction_ended:
+            if not self.__hilillo_finished:
                 self.__cpu_instance.get_pcb_ds().queuePCB(pcb)
             else:
                 self.__cpu_instance.get_pcb_ds().queueFinishedPCB(pcb)
+            self.__hilillo_finished = True
         # We call the pcb load function to load the next "hilillo" to execute
         if not self.load_pcb():
             self.finish_execution()
@@ -339,5 +340,5 @@ class Core(Thread):
     # Method to notify the CPU that the core execution ends
     def finish_execution(self):
         self.__cpu_instance.notify_core_finished()
-        self.__finish = True
+        self.__finished = True
 
