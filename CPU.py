@@ -19,6 +19,7 @@ class CPU:
 
         # bus datos, bus instrucciones, cache 0, cache 1
         self.__locks = [Lock(), Lock(), Lock(), Lock()]
+        self.__lock_owner = [-1, -1, -1, -1]
 
     # Metodo para la barrera e incrementar el relog del sistema
     def wait(self):
@@ -36,16 +37,19 @@ class CPU:
         self.__core0.start()
         self.__core1.start()
 
-    def acquire__lock(self, lock_index):
+    def acquire__lock(self, lock_index, core_id):
+        self.__lock_owner[lock_index] = core_id
         return self.__locks[lock_index].acquire(False)
 
     def release_lock(self, lock_index):
+        self.__lock_owner[lock_index] = -1
         self.__locks[lock_index].release()
 
-    def release_locks(self, acquired_locks):
+    def release_locks(self, core_id):
         for index in range(0, 4):
-            if acquired_locks[index]:
+            if self.__lock_owner[index] == core_id:
                 self.__locks[index].release()
+                self.__lock_owner[index] = -1
 
     def get_pcb_ds(self):
         return self.__pcb

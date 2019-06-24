@@ -60,9 +60,6 @@ class Core(Thread):
         self.__lr = LR.LR(self)
         self.__sc = SC.SC(self)
 
-        # Current core locks
-        self.__core_locks = [0, 0, 0, 0]
-
     def run(self):
         while not self.__finished:
             self.context_switch()
@@ -181,24 +178,21 @@ class Core(Thread):
 
     # Method to acquire the lock of the data memory bus
     def acquire_data_bus(self):
-        if self.__cpu_instance.acquire__lock(0):
-            self.__core_locks[0] = 1
+        if self.__cpu_instance.acquire__lock(0, self.__core_id):
             return True
         else:
             return False
 
     # Method to acquire the lock of the instruction memory bus
     def acquire_instruction_bus(self):
-        if self.__cpu_instance.acquire__lock(1):
-            self.__core_locks[1] = 1
+        if self.__cpu_instance.acquire__lock(1, self.__core_id):
             return True
         else:
             return False
 
     # Method to acquire the lock of self cache
     def acquire_self_cache(self):
-        if self.__cpu_instance.acquire__lock(self.__core_id + 2):
-            self.__core_locks[self.__core_id + 2] = 1
+        if self.__cpu_instance.acquire__lock(self.__core_id + 2, self.__core_id):
             return True
         else:
             return False
@@ -206,12 +200,10 @@ class Core(Thread):
     # Method to acquire the lock of the other core cache
     def acquire_other_core_cache(self):
         if self.__core_id == 0:
-            if self.__cpu_instance.acquire__lock(3):
-                self.__core_locks[3] = 1
+            if self.__cpu_instance.acquire__lock(3, self.__core_id):
                 return True
         else:
-            if self.__cpu_instance.acquire__lock(2):
-                self.__core_locks[2] = 1
+            if self.__cpu_instance.acquire__lock(2, self.__core_id):
                 return True
         return False
 
@@ -231,14 +223,12 @@ class Core(Thread):
     def release_other_core_cache(self):
         if self.__core_id == 0:
             self.__cpu_instance.release_lock(3)
-            self.__core_locks[3] = 0
         else:
             self.__cpu_instance.release_lock(2)
-            self.__core_locks[2] = 0
 
     # Method to release all core acquired locks
     def release_all_locks_acquired(self):
-        self.__cpu_instance.release_locks(self.__core_locks)
+        self.__cpu_instance.release_locks(self.__core_id)
 
     # Try to acquire other core cache, and the data bus
     def acquire_other_and_data_bus_locks(self):
