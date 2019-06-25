@@ -66,7 +66,7 @@ class Core(Thread):
             while self.quantum != 0 and self.__hilillo_finished:
                 self.__cpu_instance.wait()
                 instruction_to_execute = self.get_instruction_to_execute(self.PC)
-                self.increment_PC_default() # increment of the PC after geting the instruction to execute
+                self.increment_PC_default()  # increment of the PC after geting the instruction to execute
                 instruction_to_print = str(self.hilillo_id) + " owner " + str(self.__core_id)
                 self.decode(instruction_to_execute)
                 self.decrease_quantum()
@@ -209,18 +209,26 @@ class Core(Thread):
 
     # Release locks methods
     def release_data_bus(self):
+        if self.__core_id == 0:
+            print("RELEASE lock: data bus core: " + str(self.__core_id))
         self.__cpu_instance.release_lock(0)
         self.__core_locks[0] = 0
 
     def release_instruction_bus(self):
+        if self.__core_id == 0:
+            print("RELEASE lock: instruction bus core: " + str(self.__core_id))
         self.__cpu_instance.release_lock(1)
         self.__core_locks[1] = 0
 
     def release_self_cache(self):
+        if self.__core_id == 0:
+            print("RELEASE lock: cache core: " + str(self.__core_id))
         self.__cpu_instance.release_lock(self.__core_id + 2)
         self.__core_locks[self.__core_id + 2] = 0
 
     def release_other_core_cache(self):
+        if self.__core_id == 0:
+            print("RELEASE lock: other cache core: " + str(self.__core_id))
         if self.__core_id == 0:
             self.__cpu_instance.release_lock(3)
         else:
