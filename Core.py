@@ -10,7 +10,6 @@ from Model import ADD, ADDI, DIV, LR, LW, MUL, SC, SUB, SW, JAL, JALR, BNE, BEQ
 
 INVALID_RL_VALUE = -1
 
-
 class Core(Thread):
 
     def __init__(self, cache_type: int, cpu_instance):
@@ -44,6 +43,7 @@ class Core(Thread):
         self.RL = 0
         self.quantum = 0
         self.__hilillo_finished = True
+        self.__cycles = 0
 
         # Se inicializa las instrucciones
         self.__add = ADD.ADD(self)
@@ -66,6 +66,7 @@ class Core(Thread):
     def run(self):
         while not self.__finished:
             self.context_switch()
+            self.__cycles = 0
             while self.quantum != 0 and self.__hilillo_finished:
                 self.__cpu_instance.wait()
                 instruction_to_execute = self.get_instruction_to_execute(self.PC)
@@ -173,6 +174,7 @@ class Core(Thread):
 
     # Method to set the cycles that the core will have to wait to load next instruction and release the locks
     def set_instruction_system_clock_cycles(self, clock_cycles):
+        self.__cycles += clock_cycles
         for i in range(0, clock_cycles):
             self.__cpu_instance.wait()
 
