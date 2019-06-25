@@ -17,7 +17,14 @@ class SW:
     # Receives the core instance, and the instruction to execute
     # Returns the execution cycles of the instruction, -1 if the execute cant get the locks
     def execute(self, instruction):
+        while self.exec_store(instruction) == LOCK_ERROR:
+            self.__core_instance.release_all_locks_acquired()
+            self.__core_instance.set_instruction_system_clock_cycles(1)
+            # ToDo revisar esto
 
+
+
+    def exec_store(self, instruction):
         # Set the values for the execution
         source_registry = instruction.get_instruction()[2]
         direction_registry = instruction.get_instruction()[1]
@@ -44,7 +51,7 @@ class SW:
                         mem_address_on_other_core = \
                             self.__core_instance.get_if_memory_address_on_other_cache(mem_add_to_store)
                         if mem_address_on_other_core:
-                            mem_address_state_on_other_cache = self.__core_instance.\
+                            mem_address_state_on_other_cache = self.__core_instance. \
                                 get_memory_address_state_on_other_cache(mem_add_to_store)
                             # Clock cycles consult other core cache
                             total_execution_clock_cycles += CONSULT_OTHER_CACHE_CLOCK_CYCLES
@@ -81,6 +88,7 @@ class SW:
         value_to_store = self.__core_instance.get_register_value(source_registry)
         self.__core_instance.change_word_value_data_cache(mem_add_to_store, value_to_store)
         # Returns the execution time
+        self.__core_instance.set_instruction_system_clock_cycles(total_execution_clock_cycles)
         return total_execution_clock_cycles
 
     # Method to solve cache miss, assumes that only self cache is locked
