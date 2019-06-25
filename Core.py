@@ -135,6 +135,7 @@ class Core(Thread):
             self.__hilillo_finished = True
         # We call the pcb load function to load the next "hilillo" to execute
         if not self.load_pcb():
+            print("Empty PCB structure")
             self.finish_execution()
 
     def decrease_quantum(self):
@@ -212,19 +213,16 @@ class Core(Thread):
         if self.__core_id == 0:
             print("RELEASE lock: data bus core: " + str(self.__core_id))
         self.__cpu_instance.release_lock(0)
-        self.__core_locks[0] = 0
 
     def release_instruction_bus(self):
         if self.__core_id == 0:
             print("RELEASE lock: instruction bus core: " + str(self.__core_id))
         self.__cpu_instance.release_lock(1)
-        self.__core_locks[1] = 0
 
     def release_self_cache(self):
         if self.__core_id == 0:
             print("RELEASE lock: cache core: " + str(self.__core_id))
         self.__cpu_instance.release_lock(self.__core_id + 2)
-        self.__core_locks[self.__core_id + 2] = 0
 
     def release_other_core_cache(self):
         if self.__core_id == 0:
@@ -340,4 +338,6 @@ class Core(Thread):
     def finish_execution(self):
         self.__cpu_instance.notify_core_finished()
         self.__finished = True
+        self.__cpu_instance.kill_barrier()
+
 

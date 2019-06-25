@@ -9,11 +9,15 @@ class CPU:
     def __init__(self):
         self.__pcb = PCBDataStructure()
         self.threads_barrier = Barrier(2)
+        self.__dead_barrier = False
+        self.__killing_lock = Lock()
+        self.__waiting_lock = Lock()
         self.__system_main_memory = MainMemory(self.__pcb)
         # Hay que preguntar para que ingresen en valor del quantum
         self.__core0 = Core(0, self)
-        #self.__core1 = Core(1, self)
-        self.__core_count = 1
+        self.__core1 = Core(1, self)
+        self.__core_count = 2
+        self.running_cores = 2
         self.__system_clock = 0
         self.__default_quantum = 20
         self.__core_finished = False
@@ -26,13 +30,21 @@ class CPU:
     def wait(self):
         if self.__core_count > 1:
             if not self.__core_finished:
-                # print("Waiting", core_id)
-                barrier_thread_id = self.threads_barrier.wait()
-                # print(barrier_thread_id)
-                if barrier_thread_id == 0:
-                    self.__system_clock += 1
+                try:
+                    barrier_thread_id = self.threads_barrier.wait()
+                    if barrier_thread_id == 0:
+                        self.__system_clock += 1
+                except:
+                    pass
             else:
                 self.__system_clock += 1
+
+    def kill_barrier(self):
+        self.__killing_lock.acquire(True)
+        if not self.__dead_barrier:
+            self.threads_barrier.abort()
+            self.__dead_barrier = True
+        self.__killing_lock.release()
 
     # Se inician los cores
     def start_cores(self):
