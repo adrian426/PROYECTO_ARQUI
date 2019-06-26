@@ -14,16 +14,15 @@ class SW:
         self.__core_instance = core_instance
 
     # Start the instruction execution
-    # Receives the core instance, and the instruction to execute
-    # Returns the execution cycles of the instruction, -1 if the execute cant get the locks
+
     def execute(self, instruction):
         while self.exec_store(instruction) == LOCK_ERROR:
             self.__core_instance.release_all_locks_acquired()
             self.__core_instance.set_instruction_system_clock_cycles(1)
             # ToDo revisar esto
 
-
-
+    # Receives the core instance, and the instruction to execute
+    # Returns the execution cycles of the instruction, -1 if the execute cant get the locks
     def exec_store(self, instruction):
         # Set the values for the execution
         source_registry = instruction.get_instruction()[2]

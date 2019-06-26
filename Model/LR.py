@@ -12,10 +12,15 @@ class LR:
     def __init__(self, core_instance):
         self.__core_instance = core_instance
 
+    def execute(self, instruction):
+        while self.exec_load(instruction) == LOCK_ERROR:
+            self.__core_instance.release_all_locks_acquired()
+            self.__core_instance.set_instruction_system_clock_cycles(1)
+
     # Start the instruction execution
     # Receives the instruction to execute
     # Returns the execution cycles of the instruction, -1 if the execute cant get the locks
-    def execute(self, instruction):
+    def exec_load(self, instruction):
 
         # Set the values for the execution
         destination_registry = instruction.get_instruction()[1]
@@ -60,6 +65,7 @@ class LR:
         self.__core_instance.set_self_rl(memory_address_to_get)
 
         # Returns the execution time
+        self.__core_instance.set_instruction_system_clock_cycles(total_execution_clock_cycles)
         return total_execution_clock_cycles
 
     # Method to solve cache miss

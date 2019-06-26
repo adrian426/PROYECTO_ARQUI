@@ -13,10 +13,15 @@ class SC:
     def __init__(self, core_instance):
         self.__core_instance = core_instance
 
+    def execute(self, instruction):
+        while self.exec_store(instruction) == LOCK_ERROR:
+            self.__core_instance.release_all_locks_acquired()
+            self.__core_instance.set_instruction_system_clock_cycles(1)
+
     # Start the instruction execution
     # Receives the core instance, and the instruction to execute
     # Returns the execution cycles of the instruction, -1 if the execute cant get the locks
-    def execute(self, instruction):
+    def exec_store(self, instruction):
 
         # Set the values for the execution
         source_registry = instruction.get_instruction()[2]
@@ -67,6 +72,7 @@ class SC:
                     if self.__core_instance.get_self_rl != mem_add_to_store:
                         # Set x2 to 0
                         self.__core_instance.set_register(source_registry, 0)
+                        self.__core_instance.set_instruction_system_clock_cycles(total_execution_clock_cycles)
                         return total_execution_clock_cycles
             else:
                 # Not on self cache
@@ -74,6 +80,7 @@ class SC:
                 if self.__core_instance.get_self_rl != mem_add_to_store:
                     # Set x2 to 0
                     self.__core_instance.set_register(source_registry, 0)
+                    self.__core_instance.set_instruction_system_clock_cycles(total_execution_clock_cycles)
                     return total_execution_clock_cycles
         else:
             # Can't get self cache
@@ -84,6 +91,7 @@ class SC:
         value_to_store = self.__core_instance.get_register_value(source_registry)
         self.__core_instance.change_word_value_data_cache(mem_add_to_store, value_to_store)
         # Returns the execution time
+        self.__core_instance.set_instruction_system_clock_cycles(total_execution_clock_cycles)
         return total_execution_clock_cycles
 
     # Method to solve cache miss, assumes that only self cache is locked
