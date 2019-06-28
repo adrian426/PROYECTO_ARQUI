@@ -73,7 +73,6 @@ class Core(Thread):
                 self.increment_PC_default()  # increment of the PC after geting the instruction to execute
                 instruction_to_print = str(self.hilillo_id) + " owner " + str(self.__core_id)
                 self.decode(instruction_to_execute)
-                self.decrease_quantum()
                 self.set_instruction_system_clock_cycles(1)
                 self.release_all_locks_acquired()
                 print(instruction_to_print + " instruction " + instruction_to_execute.instruction_to_string())
@@ -109,7 +108,11 @@ class Core(Thread):
         elif instruction_code == 103:
             self.__jalr.execute(instruction)
         elif instruction_code == 999:
-            if(self.quantum > 0):
+            self.quantum = 0
+        self.decrease_quantum()
+
+        if instruction_code != 999:
+            if self.quantum == 0:
                 self.__hilillo_finished = False
 
     # Loads the data from the pcb, used in context switch

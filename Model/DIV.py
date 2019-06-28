@@ -11,6 +11,6 @@ class DIV:
 
     # Start the execution
     def execute(self, instruction):
-        result = self.__core_instance.get_register_value(instruction.get_instruction()[2]) \
-                 / self.__core_instance.get_register_value(instruction.get_instruction()[3])
+        result = int(self.__core_instance.get_register_value(instruction.get_instruction()[2]) \
+                 / self.__core_instance.get_register_value(instruction.get_instruction()[3]))
         self.__core_instance.set_register(instruction.get_instruction()[1], result)
