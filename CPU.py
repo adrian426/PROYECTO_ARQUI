@@ -26,6 +26,13 @@ class CPU:
         self.__locks = [Lock(), Lock(), Lock(), Lock()]
         self.__lock_owner = [-1, -1, -1, -1]
 
+    # Se inician los cores
+    def start_cores(self):
+        self.__core0.start()
+        if self.__core_count > 1:
+            self.__core1.start()
+        print("a")
+
     # Metodo para la barrera e incrementar el relog del sistema
     def wait(self):
         if self.__core_count > 1:
@@ -45,12 +52,6 @@ class CPU:
             self.threads_barrier.abort()
             self.__dead_barrier = True
         self.__killing_lock.release()
-
-    # Se inician los cores
-    def start_cores(self):
-        self.__core0.start()
-        if self.__core_count > 1:
-            self.__core1.start()
 
     def acquire__lock(self, lock_index, core_id):
         if core_id == 0:

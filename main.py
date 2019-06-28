@@ -1,5 +1,3 @@
-from MainMemory import MainMemory
-from PCBDataStructure import PCBDataStructure
 from CPU import CPU
 
 

@@ -43,7 +43,7 @@ class Data2WACache(AbsCache):
                 return index
 
     def get_word_from_cached_block(self, memAdd):
-        return self.dataBlocksLoaded[self.get_block_index(memAdd)].get_value(self.get_block_index(memAdd))
+        return self.dataBlocksLoaded[self.get_block_index(memAdd)].get_value(self.get_word_index(memAdd))
 
     def store_block_in_cache(self, state, memAdd, dataBlock):
         targetBlock = self.get_target_block_index(memAdd)

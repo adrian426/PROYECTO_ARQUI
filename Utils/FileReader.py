@@ -3,7 +3,7 @@ import os.path as path
 
 
 # Direccion del directorio con los hilillos
-HILILLOS_PATH = path.join(".", "Pruebitasd")
+HILILLOS_PATH = path.join(".", "HilillosDificiles")
 
 
 # Metodo para obtener los archivos de texto en el directorio
