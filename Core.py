@@ -63,6 +63,7 @@ class Core(Thread):
     def run(self):
         while not self.__finished:
             self.context_switch()
+            print("PC here " + str(self.PC))
             self.__cycles = 0
             while self.quantum != 0 and self.__hilillo_finished:
                 self.__cpu_instance.wait()

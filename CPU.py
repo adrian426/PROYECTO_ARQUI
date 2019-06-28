@@ -35,7 +35,7 @@ class CPU:
                     if barrier_thread_id == 0:
                         self.__system_clock += 1
                 except:
-                    pass
+                    self.__system_clock += 1
             else:
                 self.__system_clock += 1
 
