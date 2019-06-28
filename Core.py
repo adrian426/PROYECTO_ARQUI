@@ -141,6 +141,7 @@ class Core(Thread):
         if not self.load_pcb():
             print("Empty PCB structure")
             self.finish_execution()
+            self.quantum = 0
 
     def decrease_quantum(self):
         if self.quantum > 0:
