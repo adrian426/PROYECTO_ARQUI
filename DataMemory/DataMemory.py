@@ -13,5 +13,6 @@ class DataMemory:
         return self.__data_memory[block_index]
 
     def store_memory_block(self, block_index, block):
+        print("HOLA")
         self.__data_memory[block_index] = block
 
