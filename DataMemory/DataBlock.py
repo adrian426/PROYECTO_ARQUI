@@ -20,3 +20,6 @@ class DataBlock:
 
     def change_word_value(self, mem_address, value):
         self.__words[int((mem_address % 16)/4)] = value
+
+    def get_value(self, index):
+        return self.__words[index]

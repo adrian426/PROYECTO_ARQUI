@@ -258,7 +258,7 @@ class Core(Thread):
 
     # Method to get the value of the memory address on the cache
     def get_data_cache_value(self, memory_address):
-        return self.dataCache.get_word_index(memory_address)
+        return self.dataCache.get_word_from_cached_block(memory_address)
 
     # Method to update a register value
     def set_register(self, register_index, register_value):
