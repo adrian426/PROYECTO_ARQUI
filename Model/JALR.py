@@ -19,4 +19,3 @@ class JALR:
         new_pc = instruction.get_instruction()[2] + instruction.get_instruction()[3]
         print(str(self.__core_instance.get_PC()) + "" + new_pc)
         self.__core_instance.change_PC_by_instruction(new_pc)
-        self.__core_instance.decrease_quantum()
