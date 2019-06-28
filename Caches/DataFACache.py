@@ -1,4 +1,5 @@
 from Caches.AbsCache import AbsCache
+from StatesEnum import StatesEnum
 
 
 # fully associative cache
@@ -10,7 +11,7 @@ class DataFACache(AbsCache):
     def get_if_mem_address_is_cached(self, memAdd):
         block_index = self.get_block_index(memAdd)
         if self.dataBlocksAddress[block_index] == int(memAdd/16):
-            if self.get_block_state(block_index) != "I":
+            if self.get_block_state(block_index) != StatesEnum.INVALID:
                 return True
         return False
 

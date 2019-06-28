@@ -156,7 +156,7 @@ class Core(Thread):
         # no se si quieren guardar como atributo de clase la instruccion que se esta ejecutando.
         if not self.instructionCache.get_if_mem_address_is_cached(mem_add):
             instruction_block = self.__cpu_instance.get_main_memory().get_instruction_block(mem_add)
-            self.instructionCache.store_block_in_cache("C", mem_add, instruction_block)
+            self.instructionCache.store_block_in_cache(StatesEnum.SHARED, mem_add, instruction_block)
         return self.instructionCache.get_block(self.instructionCache.get_block_index(mem_add)).get_instruction(mem_add)
 
     # Function to get a data block from main memory
@@ -294,11 +294,13 @@ class Core(Thread):
     def get_memory_address_state_on_other_cache(self, memory_address):
         return self.__cpu_instance.get_state_of_mem_address_on_core(not self.__core_id, memory_address)
 
+    # ToDo revisar, por aquí anda el fallo
     # Method to store the block on the cache, returns the clock cycles to store
     def store_block_on_self_cache(self, state, memory_address, data_block):
         target_block_index = self.dataCache.get_target_block_index(memory_address)
         miss = False
-        if self.dataCache.get_block_state(target_block_index) == StatesEnum.MODIFIED:
+        variable_prueba = self.dataCache.get_block_state(target_block_index)
+        if variable_prueba == StatesEnum.MODIFIED:
             self.store_data_cache_block_on_main_mem(self.dataCache.get_block_address(target_block_index), state)
             miss = True
         self.dataCache.store_block_in_cache(state, memory_address, data_block)
@@ -307,6 +309,7 @@ class Core(Thread):
         else:
             return 0
 
+    # ToDo revisar, no está haciendo nada
     # Method to store the cache block on main memory and change the block state
     def store_data_cache_block_on_main_mem(self, memory_address, cache_block_new_state):
         block_to_store = DataBlock(0)
@@ -315,6 +318,7 @@ class Core(Thread):
         self.change_cache_block_state(memory_address, cache_block_new_state)
         return block_to_store
 
+    # ToDo revisar, no está haciendo nada
     # Method to store a block on other core cache
     def store_other_core_data_cache_block_on_main_memory(self, memory_address, cache_block_new_state):
         return self.__cpu_instance.store_data_cache_block_on_mm_on_core(

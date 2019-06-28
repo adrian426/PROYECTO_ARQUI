@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from StatesEnum import StatesEnum
 
 
 class AbsCache(ABC):
@@ -10,7 +11,7 @@ class AbsCache(ABC):
         for i in range(0, 8):
             self.dataBlocksLoaded.append(blockContents)
             self.dataBlocksAddress.append(0)
-            self.dataBlocksState.extend("I")
+            self.dataBlocksState.append(StatesEnum.INVALID)
         # super.__init__()
 
     # FOR ALL THE METHODS BELOW, memAdd SHOULD BE THE ADDRESS OF THE DATA,

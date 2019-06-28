@@ -1,4 +1,5 @@
 from Caches.AbsCache import AbsCache
+from StatesEnum import StatesEnum
 
 
 #  2 way associative cache
@@ -17,7 +18,7 @@ class Data2WACache(AbsCache):
         #  3-7 otherwise
         for index in addressRange:
             if self.dataBlocksAddress[index] == memAdd/16:
-                if self.get_block_state(index) != "I":
+                if self.get_block_state(index) != StatesEnum.INVALID:
                     return True
                 else:
                     return False

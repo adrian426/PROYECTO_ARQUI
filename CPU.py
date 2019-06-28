@@ -31,7 +31,6 @@ class CPU:
         self.__core0.start()
         if self.__core_count > 1:
             self.__core1.start()
-        print("a")
 
     # Metodo para la barrera e incrementar el relog del sistema
     def wait(self):
