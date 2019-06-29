@@ -327,6 +327,7 @@ class Core(Thread):
     # Method to store a value in a data cache block with a memory address
     # Assumes that the block its on cache
     def change_word_value_data_cache(self, mem_address, value):
+        self.dataCache.change_block_state(mem_address, StatesEnum.MODIFIED)
         self.dataCache.get_block_mem_address(mem_address).change_word_value(mem_address, value)
 
     # **********************************************RL**********************************************
