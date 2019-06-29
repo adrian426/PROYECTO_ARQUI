@@ -1,29 +1,40 @@
+from Model.HililloStatistics import HililloStatistics
 class CoreStatistics:
 
     def __init__(self, core_id):
-        self.id = core_id
-        self.hilillos = {}
-        self.cache_misses = 0
-        self.memory_access_hits = 0
-        self.avg_miss = 0
+        self.__id = core_id
+        self.__hilillos = {}
+        self.__cache_misses = 0
+        self.__memory_access_hits = 0
+        self.__avg_miss = 0
 
-    def add_hilillo(self, hilillo_id):
-        if hilillo_id in self.hilillos:
-            self.hilillos[hilillo_id] += 1
+    # Agrega las corridas de cada hilillo en los cores
+    def add_hilillo_runs(self, hilillo_id):
+        if hilillo_id in self.__hilillos:
+            self.__hilillos[hilillo_id] += 1
         else:
-            self.hilillos[hilillo_id] = 1
+            self.__hilillos[hilillo_id] = 1
+
+
+    def add_hilillo_statistics(self, hilillo: HililloStatistics):
+        if hilillo in self.__hilillos:
+            hilillo_temp:HililloStatistics = self.__hilillos[hilillo.get_id()]
+            pass
+        else:
+            self.__hilillos[hilillo.get_id()] = hilillo
+
 
     def increase_cache_miss(self):
-        self.cache_misses += 1
+        self.__cache_misses += 1
 
     def increase_memory_access_hits(self):
-        self.memory_access_hits += 1
+        self.__memory_access_hits += 1
 
     def avg_cache_miss(self):
-        self.avg_miss = self.cache_misses / self.memory_access_hits
+        self.__avg_miss = self.__cache_misses / self.__memory_access_hits
 
     def print(self):
-        print("Core " + str(self.id))
-        for hilillo in self.hilillos:
-            print("Hilillo " + hilillo + "   Repeticiones: " + self.hilillos[hilillo])
-        print("Tasa de fallos: " + self.cache_misses + "\n Avg (fallos/memoria): " + self.avg_miss)
+        print("Core " + str(self.__id))
+        for hilillo in self.__hilillos:
+            print("Hilillo " + hilillo + "   Repeticiones: " + self.__hilillos[hilillo])
+        print("Tasa de fallos: " + self.__cache_misses + "\n Avg (fallos/memoria): " + self.__avg_miss)

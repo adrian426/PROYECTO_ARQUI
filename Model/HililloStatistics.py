@@ -6,10 +6,15 @@ class HililloStatistics:
         self.registers = registers
         self.cycles = cycles
 
+    def add_cycles(self):
+        self.cycles
+
     def print(self):
         print("Hilillo " + self.id + "\n Registros: ")
         for index, value in self.registers:
             print("Registro " + str(index) + ": " + str(value))
         print("Ciclos totales: " + str(self.cycles))
 
+    def get_id(self):
+        return self.id
 

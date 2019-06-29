@@ -2,11 +2,12 @@ from Core import Core
 from PCBDataStructure import PCBDataStructure
 from MainMemory import MainMemory
 from threading import Barrier, Lock
-
+from SimulationStatistics import SimulationStatistics
 
 class CPU:
 
     def __init__(self):
+
         self.__pcb = PCBDataStructure()
         self.threads_barrier = Barrier(2)
         self.__dead_barrier = False
