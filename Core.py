@@ -297,12 +297,14 @@ class Core(Thread):
     # ToDo revisar, por aquí anda el fallo
     # Method to store the block on the cache, returns the clock cycles to store
     def store_block_on_self_cache(self, state, memory_address, data_block):
-        target_block_index = self.dataCache.get_target_block_index(memory_address)
         miss = False
-        variable_prueba = self.dataCache.get_block_state(target_block_index)
-        if variable_prueba == StatesEnum.MODIFIED:
-            self.store_data_cache_block_on_main_mem(self.dataCache.get_block_address(target_block_index), state)
-            miss = True
+        if self.dataCache.get_if_mem_address_is_cached(memory_address):
+            target_block_index = self.dataCache.get_target_block_index(memory_address)
+
+            variable_prueba = self.dataCache.get_block_state(target_block_index)
+            if variable_prueba == StatesEnum.MODIFIED:
+                self.store_data_cache_block_on_main_mem(self.dataCache.get_block_address(target_block_index), state)
+                miss = True
         self.dataCache.store_block_in_cache(state, memory_address, data_block)
         if miss:
             return 32
@@ -327,6 +329,7 @@ class Core(Thread):
     # Method to store a value in a data cache block with a memory address
     # Assumes that the block its on cache
     def change_word_value_data_cache(self, mem_address, value):
+        self.dataCache.change_block_state(mem_address, StatesEnum.MODIFIED)
         self.dataCache.get_block_mem_address(mem_address).change_word_value(mem_address, value)
 
     # **********************************************RL**********************************************

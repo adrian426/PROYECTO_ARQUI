@@ -12,6 +12,6 @@ class DataMemory:
     def get_memory_block(self, block_index):
         return self.__data_memory[block_index]
 
-    def store_memory_block(self, block_index, block):
-        self.__data_memory[block_index] = block
+    def store_memory_block(self, memory_address, block):
+        self.__data_memory[int(memory_address/16)] = block
 
