@@ -6,7 +6,7 @@ from Caches.InstructionsCache import InstructionsCache
 from PCB import PCB
 from threading import Thread
 from StatesEnum import StatesEnum
-from Model import ADD, ADDI, DIV, LR, LW, MUL, SC, SUB, SW, JAL, JALR, BNE, BEQ
+from Model import ADD, ADDI, DIV, LR, LW, MUL, SC, SUB, SW, JAL, JALR, BNE, BEQ, HililloStatistics
 
 INVALID_RL_VALUE = -1
 
@@ -77,6 +77,8 @@ class Core(Thread):
                 self.release_all_locks_acquired()
                 print(instruction_to_print + " instruction " + instruction_to_execute.instruction_to_string())
                 # Recordar agregar release_all_locks_acquired() cuando implementemos este ciclo
+            hilillo_statistics:HililloStatistics.HililloStatistics = HililloStatistics(self.__core_id, )
+            # hilillo_statistics
 
     #decodes and execute the instruction pointed by the PC
     def decode(self, instruction):

@@ -15,14 +15,14 @@ class CoreStatistics:
         else:
             self.__hilillos[hilillo_id] = 1
 
-
+    #Agrega las estadisticas de cada hilillo y hace un update de si ya estaban
     def add_hilillo_statistics(self, hilillo: HililloStatistics):
         if hilillo in self.__hilillos:
             hilillo_temp:HililloStatistics = self.__hilillos[hilillo.get_id()]
-            pass
+            hilillo.add_cycles(hilillo_temp.cycles)
+            self.__hilillos[hilillo.get_id()] = hilillo
         else:
             self.__hilillos[hilillo.get_id()] = hilillo
-
 
     def increase_cache_miss(self):
         self.__cache_misses += 1

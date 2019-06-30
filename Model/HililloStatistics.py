@@ -1,13 +1,16 @@
 class HililloStatistics:
 
-    def __init__(self, id, core_id, registers, cycles):
-        self.id = id
+    def __init__(self, core_id, hilillo_id, registers, cycles):
+        self.hilillo_id = hilillo_id
         self.core_id = core_id
         self.registers = registers
         self.cycles = cycles
 
-    def add_cycles(self):
-        self.cycles
+    def add_cycles(self, cycles):
+        self.cycles += cycles
+
+    def get_cycles(self, cycles):
+        self.cycles += cycles
 
     def print(self):
         print("Hilillo " + self.id + "\n Registros: ")
@@ -16,5 +19,5 @@ class HililloStatistics:
         print("Ciclos totales: " + str(self.cycles))
 
     def get_id(self):
-        return self.id
+        return self.hilillo_id
 

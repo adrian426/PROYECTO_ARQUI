@@ -15,6 +15,7 @@ class CPU:
         self.__waiting_lock = Lock()
         self.__system_main_memory = MainMemory(self.__pcb)
         # Hay que preguntar para que ingresen en valor del quantum
+        self.__simulation_statistics = SimulationStatistics()
         self.__core0 = Core(0, self)
         self.__core1 = Core(1, self)
         self.__core_count = 2
@@ -26,6 +27,7 @@ class CPU:
         # bus datos, bus instrucciones, cache 0, cache 1
         self.__locks = [Lock(), Lock(), Lock(), Lock()]
         self.__lock_owner = [-1, -1, -1, -1]
+
 
     # Se inician los cores
     def start_cores(self):
@@ -123,3 +125,6 @@ class CPU:
     # Method to get the default quantum
     def get_default_quantum(self):
         return self.__default_quantum
+
+    def get_simulation_statistics(self):
+        return self.__simulation_statistics
