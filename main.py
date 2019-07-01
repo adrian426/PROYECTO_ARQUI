@@ -1,7 +1,8 @@
 from CPU import CPU
+from SimulationStatistics import SimulationStatistics
 
-
-def main():
+simulation_statistics = SimulationStatistics()
+def main(simulation_statistics):
     # Pruebas
     # pcb = PCBDataStructure()
     # system_main_memory = MainMemory(pcb)
@@ -13,8 +14,10 @@ def main():
     # print("")
     # instruction = system_main_memory.get_instruction(668)
     # instruction.print_instruction()
-    cpu = CPU()
+    cpu = CPU(simulation_statistics)
     cpu.start_cores()
+    simulation_statistics.printStatistics()
 
 
-main()
+main(simulation_statistics)
+simulation_statistics.printStatistics()

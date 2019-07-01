@@ -8,18 +8,12 @@ class CoreStatistics:
         self.__memory_access_hits = 0
         self.__avg_miss = 0
 
-    # Agrega las corridas de cada hilillo en los cores
-    def add_hilillo_runs(self, hilillo_id):
-        if hilillo_id in self.__hilillos:
-            self.__hilillos[hilillo_id] += 1
-        else:
-            self.__hilillos[hilillo_id] = 1
-
     #Agrega las estadisticas de cada hilillo y hace un update de si ya estaban
     def add_hilillo_statistics(self, hilillo: HililloStatistics):
-        if hilillo in self.__hilillos:
-            hilillo_temp:HililloStatistics = self.__hilillos[hilillo.get_id()]
+        if hilillo.get_id() in self.__hilillos:
+            hilillo_temp: HililloStatistics = self.__hilillos[hilillo.get_id()]
             hilillo.add_cycles(hilillo_temp.cycles)
+            hilillo.add_runs(1)
             self.__hilillos[hilillo.get_id()] = hilillo
         else:
             self.__hilillos[hilillo.get_id()] = hilillo
@@ -36,5 +30,6 @@ class CoreStatistics:
     def print(self):
         print("Core " + str(self.__id))
         for hilillo in self.__hilillos:
-            print("Hilillo " + hilillo + "   Repeticiones: " + self.__hilillos[hilillo])
-        print("Tasa de fallos: " + self.__cache_misses + "\n Avg (fallos/memoria): " + self.__avg_miss)
+            print("Hilillo " + str(hilillo) + "   Repeticiones: ")
+            self.__hilillos[hilillo].print()
+        print("Tasa de fallos: " + str(self.__cache_misses) + "\n Avg (fallos/memoria): " + str(self.__avg_miss))
