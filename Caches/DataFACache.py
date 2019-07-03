@@ -35,5 +35,5 @@ class DataFACache(AbsCache):
 
     def print(self):
         for i in range(0, len(self.dataBlocksLoaded)):
-            self.dataBlocksLoaded[i].print(i)
+            self.dataBlocksLoaded[i].print(self.dataBlocksAddress[i])
             print(self.dataBlocksState[i])

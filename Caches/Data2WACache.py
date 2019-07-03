@@ -73,10 +73,10 @@ class Data2WACache(AbsCache):
     def print(self):
         print("Cache Via 1")
         for i in range(0, int(len(self.dataBlocksLoaded) / 2)):
-            self.dataBlocksLoaded[i].print(i)
+            self.dataBlocksLoaded[i].print(self.dataBlocksAddress[i])
             print(self.dataBlocksState[i])
 
         print("Cache Via 2")
         for i in range(int(len(self.dataBlocksLoaded) / 2), len(self.dataBlocksLoaded)):
-            self.dataBlocksLoaded[i].print(i)
+            self.dataBlocksLoaded[i].print(self.dataBlocksAddress[i])
             print(self.dataBlocksState[i])

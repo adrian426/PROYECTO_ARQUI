@@ -68,7 +68,13 @@ class SC:
                 # Check if the block is invalid or not in self cache, or if the RL isnt the needed value
                 if mem_address_state_on_cache == StatesEnum.INVALID:
                     # Invalid on self cache
-                    total_execution_clock_cycles += self.solve_cache_miss(mem_add_to_store)
+                    cache_miss_clock_cycles = self.solve_cache_miss(mem_add_to_store)
+                    if cache_miss_clock_cycles == LOCK_ERROR:
+                        return LOCK_ERROR
+
+                    total_execution_clock_cycles += cache_miss_clock_cycles
+                    self.__core_instance.increase_cache_miss()
+
                     if self.__core_instance.get_self_rl != mem_add_to_store:
                         # Set x2 to 0
                         self.__core_instance.set_register(source_registry, 0)
@@ -76,7 +82,13 @@ class SC:
                         return total_execution_clock_cycles
             else:
                 # Not on self cache
-                total_execution_clock_cycles += self.solve_cache_miss(mem_add_to_store)
+                cache_miss_clock_cycles = self.solve_cache_miss(mem_add_to_store)
+                if cache_miss_clock_cycles == LOCK_ERROR:
+                    return LOCK_ERROR
+
+                total_execution_clock_cycles += cache_miss_clock_cycles
+                self.__core_instance.increase_cache_miss()
+
                 if self.__core_instance.get_self_rl != mem_add_to_store:
                     # Set x2 to 0
                     self.__core_instance.set_register(source_registry, 0)

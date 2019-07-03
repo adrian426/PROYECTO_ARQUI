@@ -35,4 +35,6 @@ class SimulationStatistics:
         self.__coreStatistics1.print()
         print("Cache Data2FACache")
         self.cache1.print()
-        print("Data memory:")
+        print("\n ------------------------------------------------------\n")
+        print("Data memory:\n")
+        self.__data_memory.print()

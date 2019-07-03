@@ -46,6 +46,7 @@ class LR:
                         return LOCK_ERROR
                     else:
                         total_execution_clock_cycles += cache_miss_cycles_result
+                        self.__core_instance.increase_cache_miss()
             else:
                 # Not on self cache
                 cache_miss_cycles_result = self.solve_cache_miss(memory_address_to_get)
@@ -53,6 +54,7 @@ class LR:
                     return LOCK_ERROR
                 else:
                     total_execution_clock_cycles += cache_miss_cycles_result
+                    self.__core_instance.increase_cache_miss()
         else:
             # Can't get self cache
             return LOCK_ERROR
