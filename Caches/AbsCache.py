@@ -57,7 +57,7 @@ class AbsCache(ABC):
         return self.dataBlocksState[self.get_block_index(memory_address)]
 
     def get_block_address(self, index):
-        return self.dataBlocksAddress[index]
+        return self.dataBlocksAddress[index]*16
 
     def get_block(self, index):
         return self.dataBlocksLoaded[index]
