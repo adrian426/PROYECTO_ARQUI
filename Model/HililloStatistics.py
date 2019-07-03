@@ -21,9 +21,9 @@ class HililloStatistics:
         return self.runs
 
     def print(self):
-        print("Hilillo " + str(self.hilillo_id) + "\n Registros: ")
+        print("Registros: ")
         for i in range(0, len(self.registers)):
-            print("Registro " + str(i) + ": " + str(self.registers[i]))
+            print("R" + str(i) + ": " + str(self.registers[i]))
         print("Ciclos totales: " + str(self.cycles))
 
     def get_id(self):
