@@ -1,7 +1,7 @@
 from Core import Core
 from PCBDataStructure import PCBDataStructure
 from MainMemory import MainMemory
-from threading import Barrier, Lock
+from threading import Barrier, Lock, Thread
 from SimulationStatistics import SimulationStatistics
 
 class CPU:
@@ -23,6 +23,8 @@ class CPU:
         self.__system_clock = 0
         self.__default_quantum = 20
         self.__core_finished = False
+        self.__core_finished_counter = 0
+
 
         # bus datos, bus instrucciones, cache 0, cache 1
         self.__locks = [Lock(), Lock(), Lock(), Lock()]
@@ -34,6 +36,14 @@ class CPU:
         self.__core0.start()
         if self.__core_count > 1:
             self.__core1.start()
+        thread = Thread(target=self.print_statistics(), args=())
+        thread.start()
+        
+    def print_statistics(self):
+        self.__core0.join()
+        self.__core1.join()
+        self.__simulation_statistics.print_statistics()
+        print("Simulation Finished")
 
     # Metodo para la barrera e incrementar el relog del sistema
     def wait(self):
@@ -47,6 +57,8 @@ class CPU:
                     self.__system_clock += 1
             else:
                 self.__system_clock += 1
+                if self.__core_finished_counter == 2:
+                    self.__simulation_statistics.add_data_memory(self.__system_main_memory.get_data_memory())
 
     def kill_barrier(self):
         self.__killing_lock.acquire(True)
@@ -128,3 +140,6 @@ class CPU:
 
     def get_simulation_statistics(self):
         return self.__simulation_statistics
+    
+    def increase_finished_counter(self):
+        self.__core_finished_counter += 1

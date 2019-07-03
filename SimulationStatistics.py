@@ -24,6 +24,7 @@ class SimulationStatistics:
         else:
             self.cache1 = cache
 
-    def printStatistics(self):
+    def print_statistics(self):
         self.__coreStatistics0.print()
         self.__coreStatistics1.print()
+        print("Data memory:")

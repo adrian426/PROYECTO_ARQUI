@@ -72,3 +72,6 @@ class MainMemory:
 
     def set_data_block(self, mem_add, data_block):
         self.__data_memory.store_memory_block(mem_add, data_block)
+
+    def get_data_memory(self):
+        return self.__data_memory

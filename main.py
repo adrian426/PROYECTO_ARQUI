@@ -16,8 +16,8 @@ def main(simulation_statistics):
     # instruction.print_instruction()
     cpu = CPU(simulation_statistics)
     cpu.start_cores()
-    simulation_statistics.printStatistics()
+    # simulation_statistics.printStatistics()
 
 
 main(simulation_statistics)
-simulation_statistics.printStatistics()
+# simulation_statistics.printStatistics()
