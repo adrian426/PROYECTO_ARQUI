@@ -2,6 +2,7 @@ from Core import Core
 from PCBDataStructure import PCBDataStructure
 from MainMemory import MainMemory
 from threading import Barrier, Lock, Thread
+from SimulationStatistics import SimulationStatistics
 
 class CPU:
 
