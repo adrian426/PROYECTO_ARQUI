@@ -41,7 +41,6 @@ class CPU:
     def print_statistics(self):
         self.__core0.join()
         self.__core1.join()
-        self.get_main_memory().get_data_memory().print()
         self.__simulation_statistics.add_cache(0, self.__core0.get_data_cache())
         self.__simulation_statistics.add_cache(1, self.__core1.get_data_cache())
         self.__simulation_statistics.print_statistics()
