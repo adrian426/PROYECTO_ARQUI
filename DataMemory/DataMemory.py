@@ -16,6 +16,8 @@ class DataMemory:
         self.__data_memory[int(memory_address/16)] = block
 
     def print(self):
-        for i, block in self.__data_memory:
+        i = 0
+        for block in self.__data_memory:
             print("Block number " + str(i))
+            i += 1
             block.print_block()

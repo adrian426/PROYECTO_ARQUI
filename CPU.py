@@ -2,7 +2,6 @@ from Core import Core
 from PCBDataStructure import PCBDataStructure
 from MainMemory import MainMemory
 from threading import Barrier, Lock, Thread
-from SimulationStatistics import SimulationStatistics
 
 class CPU:
 
@@ -42,6 +41,7 @@ class CPU:
     def print_statistics(self):
         self.__core0.join()
         self.__core1.join()
+        self.get_main_memory().get_data_memory().print()
         self.__simulation_statistics.print_statistics()
         print("Simulation Finished")
 
@@ -68,22 +68,22 @@ class CPU:
         self.__killing_lock.release()
 
     def acquire__lock(self, lock_index, core_id):
-        if core_id == 0:
-            print("ACQUIRE lock: " + str(lock_index) + " core: " + str(core_id))
+        # if core_id == 0:
+            # print("ACQUIRE lock: " + str(lock_index) + " core: " + str(core_id))
         self.__lock_owner[lock_index] = core_id
         return self.__locks[lock_index].acquire(False)
 
     def release_lock(self, lock_index):
-        if self.__lock_owner[lock_index] == 0:
-            print("RELEASE lock: " + str(lock_index) + " core: " + str(self.__lock_owner[lock_index]))
+        # if self.__lock_owner[lock_index] == 0:
+            # print("RELEASE lock: " + str(lock_index) + " core: " + str(self.__lock_owner[lock_index]))
         self.__lock_owner[lock_index] = -1
         self.__locks[lock_index].release()
 
     def release_locks(self, core_id):
         for index in range(0, 4):
             if self.__lock_owner[index] == core_id:
-                if self.__lock_owner[index] == 0:
-                    print("RELEASE lock: " + str(index) + " core: " + str(self.__lock_owner[index]))
+                # if self.__lock_owner[index] == 0:
+                    # print("RELEASE lock: " + str(index) + " core: " + str(self.__lock_owner[index]))
                 self.__locks[index].release()
                 self.__lock_owner[index] = -1
 

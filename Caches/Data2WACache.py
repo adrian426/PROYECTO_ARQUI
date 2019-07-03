@@ -17,7 +17,7 @@ class Data2WACache(AbsCache):
         # if it's in the way 0, then addressRange is 0-3,
         #  3-7 otherwise
         for index in addressRange:
-            if self.dataBlocksAddress[index] == memAdd/16:
+            if self.dataBlocksAddress[index] == int(memAdd/16):
                 if self.get_block_state(index) != StatesEnum.INVALID:
                     return True
                 else:

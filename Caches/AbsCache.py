@@ -10,7 +10,7 @@ class AbsCache(ABC):
         self.dataBlocksState = []
         for i in range(0, 8):
             self.dataBlocksLoaded.append(blockContents)
-            self.dataBlocksAddress.append(0)
+            self.dataBlocksAddress.append(-1)
             self.dataBlocksState.append(StatesEnum.INVALID)
         # super.__init__()
 

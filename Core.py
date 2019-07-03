@@ -64,9 +64,9 @@ class Core(Thread):
     def run(self):
         while not self.__finished:
             self.context_switch()
-            if self.PC == 424:
-                print("")
-            print("PC here " + str(self.PC))
+            # if self.PC == 424:
+            #     print("")
+            # print("PC here " + str(self.PC))
             self.__cycles = 0
             while self.quantum != 0 and self.__hilillo_finished:
                 self.__cpu_instance.wait()
@@ -76,7 +76,7 @@ class Core(Thread):
                 self.decode(instruction_to_execute)
                 self.set_instruction_system_clock_cycles(1)
                 self.release_all_locks_acquired()
-                print(instruction_to_print + " instruction " + instruction_to_execute.instruction_to_string())
+                # print(instruction_to_print + " instruction " + instruction_to_execute.instruction_to_string())
                 # Recordar agregar release_all_locks_acquired() cuando implementemos este ciclo
             hilillo_statistics = HililloStatistics(self.__core_id, self.hilillo_id, self.register, self.__cycles, self.RL, 1)
             self.__cpu_instance.get_simulation_statistics().getCoreStatistics(self.__core_id).add_hilillo_statistics(hilillo_statistics)
@@ -147,7 +147,7 @@ class Core(Thread):
             self.__hilillo_finished = True
         # We call the pcb load function to load the next "hilillo" to execute
         if not self.load_pcb():
-            print("Empty PCB structure")
+            # print("Empty PCB structure")
             self.finish_execution()
             self.quantum = 0
 
@@ -224,23 +224,23 @@ class Core(Thread):
 
     # Release locks methods
     def release_data_bus(self):
-        if self.__core_id == 0:
-            print("RELEASE lock: data bus core: " + str(self.__core_id))
+        # if self.__core_id == 0:
+            # print("RELEASE lock: data bus core: " + str(self.__core_id))
         self.__cpu_instance.release_lock(0)
 
     def release_instruction_bus(self):
-        if self.__core_id == 0:
-            print("RELEASE lock: instruction bus core: " + str(self.__core_id))
+        # if self.__core_id == 0:
+            # print("RELEASE lock: instruction bus core: " + str(self.__core_id))
         self.__cpu_instance.release_lock(1)
 
     def release_self_cache(self):
-        if self.__core_id == 0:
-            print("RELEASE lock: cache core: " + str(self.__core_id))
+        # if self.__core_id == 0:
+            # print("RELEASE lock: cache core: " + str(self.__core_id))
         self.__cpu_instance.release_lock(self.__core_id + 2)
 
     def release_other_core_cache(self):
-        if self.__core_id == 0:
-            print("RELEASE lock: other cache core: " + str(self.__core_id))
+        # if self.__core_id == 0:
+            # print("RELEASE lock: other cache core: " + str(self.__core_id))
         if self.__core_id == 0:
             self.__cpu_instance.release_lock(3)
         else:
@@ -303,7 +303,7 @@ class Core(Thread):
     # Method to store the block on the cache, returns the clock cycles to store
     def store_block_on_self_cache(self, state, memory_address, data_block):
         miss = False
-        if self.dataCache.get_if_mem_address_is_cached(memory_address):
+        if not self.dataCache.get_if_mem_address_is_cached(memory_address):
             target_block_index = self.dataCache.get_target_block_index(memory_address)
 
             variable_prueba = self.dataCache.get_block_state(target_block_index)

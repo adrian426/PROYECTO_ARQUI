@@ -15,8 +15,7 @@ class DataBlock:
         return self.__words
 
     def print_block(self):
-        for data in self.__words:
-            print(data)
+        print(self.__words)
 
     def change_word_value(self, mem_address, value):
         self.__words[int((mem_address % 16)/4)] = value
