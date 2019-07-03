@@ -6,7 +6,7 @@ from SimulationStatistics import SimulationStatistics
 
 class CPU:
 
-    def __init__(self, simulation_statistics):
+    def __init__(self):
 
         self.__pcb = PCBDataStructure()
         self.threads_barrier = Barrier(2)
@@ -15,7 +15,7 @@ class CPU:
         self.__waiting_lock = Lock()
         self.__system_main_memory = MainMemory(self.__pcb)
         # Hay que preguntar para que ingresen en valor del quantum
-        self.__simulation_statistics = simulation_statistics
+        self.__simulation_statistics = SimulationStatistics()
         self.__core0 = Core(0, self)
         self.__core1 = Core(1, self)
         self.__core_count = 2
