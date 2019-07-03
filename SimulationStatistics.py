@@ -25,6 +25,14 @@ class SimulationStatistics:
             self.cache1 = cache
 
     def print_statistics(self):
+        print("\n ------------------------------------------------------\n"
+              "Estadisticas de la simulacion \n "
+              "------------------------------------------------------")
         self.__coreStatistics0.print()
+        print("Cache Data2WACache")
+        self.cache0.print()
+        print("\n ------------------------------------------------------\n")
         self.__coreStatistics1.print()
+        print("Cache Data2FACache")
+        self.cache1.print()
         print("Data memory:")

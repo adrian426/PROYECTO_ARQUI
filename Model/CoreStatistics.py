@@ -30,6 +30,6 @@ class CoreStatistics:
     def print(self):
         print("Core " + str(self.__id))
         for hilillo in self.__hilillos:
-            print("Hilillo " + str(hilillo) + "   Repeticiones: ")
+            print("Hilillo " + str(hilillo) + "   Repeticiones: " + str(self.__hilillos[hilillo].get_runs()))
             self.__hilillos[hilillo].print()
         print("Tasa de fallos: " + str(self.__cache_misses) + "\n Avg (fallos/memoria): " + str(self.__avg_miss))

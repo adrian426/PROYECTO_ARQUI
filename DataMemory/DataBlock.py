@@ -22,3 +22,9 @@ class DataBlock:
 
     def get_value(self, index):
         return self.__words[index]
+
+    def print(self, index):
+        values = "Valores del bloque " + str(index) + ": "
+        for word in self.__words:
+            values = values + " " + str(word)
+        print(values)

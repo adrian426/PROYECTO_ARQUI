@@ -28,9 +28,9 @@ class Core(Thread):
 
         # Dependiendo del tipo de cache se inicializa
         if cache_type == 0:
-            self.dataCache = Data2WACache(data_block)
+            self.data_cache = Data2WACache(data_block)
         elif cache_type == 1:
-            self.dataCache = DataFACache(data_block)
+            self.data_cache = DataFACache(data_block)
         else:
             raise TypeError("Unknown Value for cache type.")
 
@@ -263,7 +263,7 @@ class Core(Thread):
 
     # Method to get the value of the memory address on the cache
     def get_data_cache_value(self, memory_address):
-        return self.dataCache.get_word_from_cached_block(memory_address)
+        return self.data_cache.get_word_from_cached_block(memory_address)
 
     # Method to update a register value
     def set_register(self, register_index, register_value):
@@ -277,7 +277,7 @@ class Core(Thread):
 
     # Method to change state of cache block
     def change_cache_block_state(self, memory_address, new_state):
-        self.dataCache.change_block_state(memory_address, new_state)
+        self.data_cache.change_block_state(memory_address, new_state)
 
     # Method to change the state on other core cache block, receives the memory address, and the new state
     def change_block_state_on_other_core_cache(self, memory_address, new_state):
@@ -285,7 +285,7 @@ class Core(Thread):
 
     # Function to get if the memory_address block its stored on self cache
     def get_if_mem_address_is_on_self_cache(self, memory_address):
-        return self.dataCache.get_if_mem_address_is_cached(memory_address)
+        return self.data_cache.get_if_mem_address_is_cached(memory_address)
 
     # Function to get if the memory_address block its stored on other core cache
     def get_if_memory_address_on_other_cache(self, memory_address):
@@ -293,7 +293,7 @@ class Core(Thread):
 
     # Function to get the state of the block with the memory address
     def get_memory_address_state_on_cache(self, memory_address):
-        return self.dataCache.get_memory_address_block_state(memory_address)
+        return self.data_cache.get_memory_address_block_state(memory_address)
 
     # Function to get the state of the block with the memory address on the other core cache
     def get_memory_address_state_on_other_cache(self, memory_address):
@@ -303,14 +303,14 @@ class Core(Thread):
     # Method to store the block on the cache, returns the clock cycles to store
     def store_block_on_self_cache(self, state, memory_address, data_block):
         miss = False
-        if not self.dataCache.get_if_mem_address_is_cached(memory_address):
-            target_block_index = self.dataCache.get_target_block_index(memory_address)
+        if not self.data_cache.get_if_mem_address_is_cached(memory_address):
+            target_block_index = self.data_cache.get_target_block_index(memory_address)
 
-            variable_prueba = self.dataCache.get_block_state(target_block_index)
+            variable_prueba = self.data_cache.get_block_state(target_block_index)
             if variable_prueba == StatesEnum.MODIFIED:
-                self.store_data_cache_block_on_main_mem(self.dataCache.get_block_address(target_block_index), state)
+                self.store_data_cache_block_on_main_mem(self.data_cache.get_block_address(target_block_index), state)
                 miss = True
-        self.dataCache.store_block_in_cache(state, memory_address, data_block)
+        self.data_cache.store_block_in_cache(state, memory_address, data_block)
         if miss:
             return 32
         else:
@@ -320,7 +320,7 @@ class Core(Thread):
     # Method to store the cache block on main memory and change the block state
     def store_data_cache_block_on_main_mem(self, memory_address, cache_block_new_state):
         block_to_store = DataBlock(0)
-        block_to_store.copy_data_block(self.dataCache.get_block_mem_address(memory_address))
+        block_to_store.copy_data_block(self.data_cache.get_block_mem_address(memory_address))
         self.__cpu_instance.get_main_memory().set_data_block(memory_address, block_to_store)
         self.change_cache_block_state(memory_address, cache_block_new_state)
         return block_to_store
@@ -334,8 +334,8 @@ class Core(Thread):
     # Method to store a value in a data cache block with a memory address
     # Assumes that the block its on cache
     def change_word_value_data_cache(self, mem_address, value):
-        self.dataCache.change_block_state(mem_address, StatesEnum.MODIFIED)
-        self.dataCache.get_block_mem_address(mem_address).change_word_value(mem_address, value)
+        self.data_cache.change_block_state(mem_address, StatesEnum.MODIFIED)
+        self.data_cache.get_block_mem_address(mem_address).change_word_value(mem_address, value)
 
     # **********************************************RL**********************************************
     # Method to get the RL
@@ -361,4 +361,5 @@ class Core(Thread):
         self.__finished = True
         self.__cpu_instance.kill_barrier()
 
-
+    def get_data_cache(self):
+        return self.data_cache

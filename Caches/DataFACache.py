@@ -33,3 +33,7 @@ class DataFACache(AbsCache):
     def get_target_block_index(self, memAdd):
         return self.get_block_index(memAdd)
 
+    def print(self):
+        for i in range(0, len(self.dataBlocksLoaded)):
+            self.dataBlocksLoaded[i].print(i)
+            print(self.dataBlocksState[i])

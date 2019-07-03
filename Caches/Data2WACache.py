@@ -70,3 +70,13 @@ class Data2WACache(AbsCache):
         else:
             return 4 + self.fifo_index_way_1
 
+    def print(self):
+        print("Cache Via 1")
+        for i in range(0, int(len(self.dataBlocksLoaded) / 2)):
+            self.dataBlocksLoaded[i].print(i)
+            print(self.dataBlocksState[i])
+
+        print("Cache Via 2")
+        for i in range(int(len(self.dataBlocksLoaded) / 2), len(self.dataBlocksLoaded)):
+            self.dataBlocksLoaded[i].print(i)
+            print(self.dataBlocksState[i])
