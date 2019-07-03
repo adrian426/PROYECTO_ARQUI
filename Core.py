@@ -363,3 +363,6 @@ class Core(Thread):
 
     def get_data_cache(self):
         return self.data_cache
+
+    def increase_cache_miss(self):
+        self.__cpu_instance.get_simulation_statistics().getCoreStatistics(self.__core_id).increase_cache_miss()
