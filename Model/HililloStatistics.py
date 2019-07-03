@@ -14,8 +14,11 @@ class HililloStatistics:
     def add_runs(self, runs):
         self.runs += runs
 
-    def get_cycles(self, cycles):
-        self.cycles += cycles
+    def get_cycles(self):
+        return self.cycles
+
+    def get_runs(self):
+        return self.runs
 
     def print(self):
         print("Hilillo " + str(self.hilillo_id) + "\n Registros: ")
