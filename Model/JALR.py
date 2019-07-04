@@ -17,5 +17,4 @@ class JALR:
         self.__core_instance.set_register(instruction.get_instruction()[1], current_pc)
         # PC = PC + inmediate
         new_pc = self.__core_instance.get_register_value(instruction.get_instruction()[2]) + instruction.get_instruction()[3]
-        print(str(self.__core_instance.get_PC()) + " " + str(new_pc))
         self.__core_instance.change_PC_by_instruction(new_pc)

@@ -37,14 +37,9 @@ class Data2WACache(AbsCache):
     def get_block_index(self, memAdd):
         way = self.get_block_way(memAdd)
         addressRange = self.get_way_range(way)
-        indexa = -1;
         for index in addressRange:
-            indexa=index
-            print(str(index) + " " + str(self.dataBlocksAddress[index]) + " " + str(self.dataBlocksState[index]))
             if self.dataBlocksAddress[index] == int(memAdd / 16):
                 return index
-        print("Se f'u " + str(indexa) + " " + str(memAdd))
-        self.print()
 
     def get_word_from_cached_block(self, memAdd):
         return self.dataBlocksLoaded[self.get_block_index(memAdd)].get_value(self.get_word_index(memAdd))
