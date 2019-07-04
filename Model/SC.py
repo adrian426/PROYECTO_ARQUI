@@ -33,7 +33,7 @@ class SC:
             self.__core_instance.get_register_value(direction_registry)
 
         if int(mem_add_to_store/16) == 16:
-            print("Store C en bloque 16 con instrucción " + instruction.instruction_to_string()+ " " + str(self.__core_instance.get_PC()))
+            print("Store C en bloque 16 con instrucción " + instruction.instruction_to_string()+ " " + str(self.__core_instance.get_PC()) + " ->" + str(mem_add_to_store))
 
         # Check if there is a cache miss
         # LOCK SELF CACHE!!
@@ -42,8 +42,10 @@ class SC:
             mem_address_on_cache = self.__core_instance.get_if_mem_address_is_on_self_cache(mem_add_to_store)
             if mem_address_on_cache:
                 mem_address_state_on_cache = self.__core_instance.get_memory_address_state_on_cache(mem_add_to_store)
+                rl_bool_result = self.__core_instance.get_self_rl()
+                print("RL " + str(rl_bool_result))
                 if mem_address_state_on_cache == StatesEnum.SHARED and \
-                        (self.__core_instance.get_self_rl == mem_add_to_store):
+                        (rl_bool_result == mem_add_to_store):
                     # Check if the block is shared and the RL value is the needed
                     # SHARED ON SELF CACHE, CHECK THE OTHER CORE
                     # LOCK OTHER CORE CACHE AND DATA BUS
@@ -78,7 +80,7 @@ class SC:
                     total_execution_clock_cycles += cache_miss_clock_cycles
                     self.__core_instance.increase_cache_miss()
 
-                    if self.__core_instance.get_self_rl != mem_add_to_store:
+                    if self.__core_instance.get_self_rl() != mem_add_to_store:
                         # Set x2 to 0
                         self.__core_instance.set_register(source_registry, 0)
                         self.__core_instance.set_instruction_system_clock_cycles(total_execution_clock_cycles)
@@ -92,7 +94,7 @@ class SC:
                 total_execution_clock_cycles += cache_miss_clock_cycles
                 self.__core_instance.increase_cache_miss()
 
-                if self.__core_instance.get_self_rl != mem_add_to_store:
+                if self.__core_instance.get_self_rl() != mem_add_to_store:
                     # Set x2 to 0
                     self.__core_instance.set_register(source_registry, 0)
                     self.__core_instance.set_instruction_system_clock_cycles(total_execution_clock_cycles)

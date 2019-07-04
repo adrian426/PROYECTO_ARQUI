@@ -33,9 +33,9 @@ class CPU:
 
     # Se inician los cores
     def start_cores(self):
-        self.__core0.start()
+        self.__core1.start()
         if self.__core_count > 1:
-            self.__core1.start()
+            self.__core0.start()
         thread = Thread(target=self.print_statistics(), args=())
         thread.start()
         
@@ -73,8 +73,10 @@ class CPU:
     def acquire__lock(self, lock_index, core_id):
         # if core_id == 0:
             # print("ACQUIRE lock: " + str(lock_index) + " core: " + str(core_id))
-        self.__lock_owner[lock_index] = core_id
-        return self.__locks[lock_index].acquire(False)
+        if self.__locks[lock_index].acquire(False):
+            self.__lock_owner[lock_index] = core_id
+            return True
+        return False
 
     def release_lock(self, lock_index):
         # if self.__lock_owner[lock_index] == 0:

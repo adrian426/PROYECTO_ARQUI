@@ -252,11 +252,11 @@ class Core(Thread):
 
     # Try to acquire other core cache, and the data bus
     def acquire_other_and_data_bus_locks(self):
-        if self.acquire_other_core_cache():
-            if self.acquire_data_bus():
+        if self.acquire_data_bus():
+            if self.acquire_other_core_cache():
                 return True
             else:
-                self.release_other_core_cache()
+                self.release_data_bus()
         return False
 
     # ********************************* GET/SET registers and caches *********************************
@@ -342,12 +342,12 @@ class Core(Thread):
     # **********************************************RL**********************************************
     # Method to get the RL
     def get_self_rl(self):
-        return self.RL
+        return int(self.RL)
 
     # Method to invalidate RL core
     def invalidate_self_rl(self, mem_add):
         if self.RL == mem_add:
-            self.RL = INVALID_RL_VALUE
+            self.RL = -1
 
     # Method to set the value of RL (for lr)
     def set_self_rl(self, mem_add):
