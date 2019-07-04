@@ -35,13 +35,12 @@ class Data2WACache(AbsCache):
             return range(4,8)
 
     def get_block_index(self, memAdd):
-        if(self.get_if_mem_address_is_cached(memAdd)):
-            way = self.get_block_way(memAdd)
-            addressRange = self.get_way_range(way)
-            for index in addressRange:
-                if self.dataBlocksAddress[index] == int(memAdd / 16):
-                    return index
-        raise TypeError("Se f'u")
+        way = self.get_block_way(memAdd)
+        addressRange = self.get_way_range(way)
+        for index in addressRange:
+            if self.dataBlocksAddress[index] == int(memAdd / 16):
+                return index
+        raise TypeError("Se solicitó una dirección de memoria que no estaba en caché")
 
     def get_word_from_cached_block(self, memAdd):
         return self.dataBlocksLoaded[self.get_block_index(memAdd)].get_value(self.get_word_index(memAdd))
@@ -54,7 +53,7 @@ class Data2WACache(AbsCache):
             way = 0
         self.dataBlocksLoaded[targetBlock] = dataBlock
         self.dataBlocksAddress[targetBlock] = int(memAdd/16) # Store the block address
-        self.change_block_state(memAdd, state)
+        self.dataBlocksState[targetBlock] = state
         self.augment_way_fifo_index(way)
 
     def augment_way_fifo_index(self, way):
