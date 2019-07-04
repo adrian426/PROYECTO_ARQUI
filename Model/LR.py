@@ -31,6 +31,9 @@ class LR:
         memory_address_to_get = \
             self.__core_instance.get_register_value(direction_registry)
 
+        if int(memory_address_to_get/16) == 16:
+            print("")
+
         # Check if there is a cache miss
         # LOCK SELF CACHE!!
         if self.__core_instance.acquire_self_cache():

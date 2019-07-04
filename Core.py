@@ -285,6 +285,8 @@ class Core(Thread):
 
     # Function to get if the memory_address block its stored on self cache
     def get_if_mem_address_is_on_self_cache(self, memory_address):
+        if int(memory_address/16) == 16:
+            print("")
         return self.data_cache.get_if_mem_address_is_cached(memory_address)
 
     # Function to get if the memory_address block its stored on other core cache

@@ -33,9 +33,9 @@ class CPU:
 
     # Se inician los cores
     def start_cores(self):
-        self.__core0.start()
+        self.__core1.start()
         if self.__core_count > 1:
-            self.__core1.start()
+            self.__core0.start()
         thread = Thread(target=self.print_statistics(), args=())
         thread.start()
         

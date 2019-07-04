@@ -34,6 +34,9 @@ class SW:
         mem_add_to_store = \
             self.__core_instance.get_register_value(direction_registry) + direction_immediate
 
+        if int(mem_add_to_store/16 == 16):
+            print("Store en bloque 16 con instrucción " + instruction.instruction_to_string())
+
         # Check if there is a cache miss
         # LOCK SELF CACHE!!
         if self.__core_instance.acquire_self_cache():
@@ -115,6 +118,8 @@ class SW:
                     StatesEnum.SHARED, m_address, data_block_to_insert)
                 return clock_cycles
             # Memory address isn't in the other core or isn't modified
+            # Invalidate the RL on the other core, in the case that it was using a lr
+            self.__core_instance.invalidate_other_core_rl(m_address)
             # LOCK RELEASED OTHER CORE CACHE
             self.__core_instance.release_other_core_cache()
             # Only need to load to self cache + 32
