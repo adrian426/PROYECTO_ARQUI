@@ -33,7 +33,7 @@ class SC:
             self.__core_instance.get_register_value(direction_registry)
 
         if int(mem_add_to_store/16 == 16):
-            print("")
+            print("Store C en bloque 16 con instrucción " + instruction.instruction_to_string()+ " " + str(self.__core_instance.get_PC()))
 
         # Check if there is a cache miss
         # LOCK SELF CACHE!!
