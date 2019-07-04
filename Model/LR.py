@@ -31,8 +31,8 @@ class LR:
         memory_address_to_get = \
             self.__core_instance.get_register_value(direction_registry)
 
-        if int(memory_address_to_get/16) == 16:
-            print("Load R en bloque 16 con instrucción " + instruction.instruction_to_string() + " " + str(self.__core_instance.get_PC()))
+        #if int(memory_address_to_get/16) == 16:
+        print(""+str(memory_address_to_get))
 
         # Check if there is a cache miss
         # LOCK SELF CACHE!!

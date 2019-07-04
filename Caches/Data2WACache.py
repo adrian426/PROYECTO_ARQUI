@@ -35,11 +35,13 @@ class Data2WACache(AbsCache):
             return range(4,8)
 
     def get_block_index(self, memAdd):
-        way = self.get_block_way(memAdd)
-        addressRange = self.get_way_range(way)
-        for index in addressRange:
-            if self.dataBlocksAddress[index] == int(memAdd / 16):
-                return index
+        if(self.get_if_mem_address_is_cached(memAdd)):
+            way = self.get_block_way(memAdd)
+            addressRange = self.get_way_range(way)
+            for index in addressRange:
+                if self.dataBlocksAddress[index] == int(memAdd / 16):
+                    return index
+        raise TypeError("Se f'u")
 
     def get_word_from_cached_block(self, memAdd):
         return self.dataBlocksLoaded[self.get_block_index(memAdd)].get_value(self.get_word_index(memAdd))
