@@ -34,7 +34,7 @@ class SW:
         mem_add_to_store = \
             self.__core_instance.get_register_value(direction_registry) + direction_immediate
 
-        if int(mem_add_to_store/16) == 16:
+        if mem_add_to_store == 260:
             print("Store W en bloque 16 con instrucción " + instruction.instruction_to_string()+ " " + str(self.__core_instance.get_PC()))
 
         # Check if there is a cache miss

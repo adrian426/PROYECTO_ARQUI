@@ -23,8 +23,8 @@ class HililloStatistics:
     def print(self):
         print("Registros: ")
         print("RL: " + str(self.rl))
-        # for i in range(0, len(self.registers)):
-        #     print("R" + str(i) + ": " + str(self.registers[i]))
+        for i in range(0, len(self.registers)):
+            print("R" + str(i) + ": " + str(self.registers[i]))
         print("Ciclos totales: " + str(self.cycles))
 
     def get_id(self):
