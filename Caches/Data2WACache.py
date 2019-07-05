@@ -38,7 +38,7 @@ class Data2WACache(AbsCache):
         way = self.get_block_way(memAdd)
         addressRange = self.get_way_range(way)
         for index in addressRange:
-            if self.dataBlocksAddress[index] == int(memAdd / 16):
+            if self.dataBlocksAddress[index] == int(memAdd / 16) and self.dataBlocksState[index] != StatesEnum.INVALID:
                 return index
         raise TypeError("Se solicitó una dirección de memoria que no estaba en caché")
 

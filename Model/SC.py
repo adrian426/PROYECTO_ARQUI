@@ -32,7 +32,7 @@ class SC:
         mem_add_to_store = \
             self.__core_instance.get_register_value(direction_registry)
 
-        if mem_add_to_store == 260:
+        if int(mem_add_to_store/16) == 8 or int(mem_add_to_store/16) == 16 or int(mem_add_to_store/16) == 9:
             print("Store C en bloque 16 con instrucción " + instruction.instruction_to_string()+ " " + str(self.__core_instance.get_PC()) + " ->" + str(mem_add_to_store))
 
         # Check if there is a cache miss
@@ -134,6 +134,9 @@ class SC:
                     StatesEnum.SHARED, m_address, data_block_to_insert)
                 return clock_cycles
             # Memory address isn't in the other core or isn't modified
+            if self.__core_instance.get_if_memory_address_on_other_cache(m_address) and \
+                    self.__core_instance.get_memory_address_state_on_other_cache(m_address) == StatesEnum.SHARED:
+                self.__core_instance.change_block_state_on_other_core_cache(m_address, StatesEnum.INVALID)
             # Invalidate the RL on the other core, in the case that it was using a lr
             self.__core_instance.invalidate_other_core_rl(m_address)
             # LOCK RELEASED OTHER CORE CACHE

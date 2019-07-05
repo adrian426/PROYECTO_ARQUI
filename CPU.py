@@ -33,9 +33,9 @@ class CPU:
 
     # Se inician los cores
     def start_cores(self):
-        self.__core0.start()
+        self.__core1.start()
         if self.__core_count > 1:
-            self.__core1.start()
+            self.__core0.start()
         thread = Thread(target=self.print_statistics(), args=())
         thread.start()
         
@@ -109,6 +109,8 @@ class CPU:
 
     # Return if the memory address its on the other core cache
     def get_if_mem_address_is_on_core_cache(self, core, memory_address):
+        if int(memory_address/16) == 16:
+            print("")
         if core == 0 or self.__core_count <= 1:
             return self.__core0.get_if_mem_address_is_on_self_cache(memory_address)
         else:

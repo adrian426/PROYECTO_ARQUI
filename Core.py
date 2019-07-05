@@ -291,6 +291,8 @@ class Core(Thread):
 
     # Function to get if the memory_address block its stored on other core cache
     def get_if_memory_address_on_other_cache(self, memory_address):
+        if memory_address == 128:
+            print("")
         return self.__cpu_instance.get_if_mem_address_is_on_core_cache(not self.__core_id, memory_address)
 
     # Function to get the state of the block with the memory address
