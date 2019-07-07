@@ -79,7 +79,7 @@ class Core(Thread):
                 # print(instruction_to_print + " instruction " + instruction_to_execute.instruction_to_string())
                 # Recordar agregar release_all_locks_acquired() cuando implementemos este ciclo
             hilillo_statistics = HililloStatistics(self.__core_id, self.hilillo_id, self.register, self.__cycles, self.RL, 1)
-            self.__cpu_instance.get_simulation_statistics().getCoreStatistics(self.__core_id).add_hilillo_statistics(hilillo_statistics)
+            self.__cpu_instance.get_simulation_statistics().add_hilillo_statistics(hilillo_statistics)
         self.__cpu_instance.increase_finished_counter()
 
     #decodes and execute the instruction pointed by the PC

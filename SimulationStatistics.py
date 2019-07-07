@@ -5,6 +5,7 @@ class SimulationStatistics:
     def __init__(self):
         self.__coreStatistics0 = CoreStatistics.CoreStatistics(0)
         self.__coreStatistics1 = CoreStatistics.CoreStatistics(1)
+        self.__hilillos = {}
         self.__data_memory = []
         self.cache0 = ""
         self.cache1 = ""
@@ -24,10 +25,23 @@ class SimulationStatistics:
         else:
             self.cache1 = cache
 
+    #Agrega las estadisticas de cada hilillo y hace un update de si ya estaban
+    def add_hilillo_statistics(self, hilillo: HililloStatistics):
+        if hilillo.get_id() in self.__hilillos:
+            hilillo_temp: HililloStatistics = self.__hilillos[hilillo.get_id()]
+            hilillo_temp.add_cycles(hilillo.cycles)
+            hilillo_temp.add_runs(hilillo.core)
+            self.__hilillos[hilillo.get_id()] = hilillo_temp
+        else:
+            self.__hilillos[hilillo.get_id()] = hilillo
+
+    #prints statistics of the whole simulation
     def print_statistics(self):
         print("\n ------------------------------------------------------\n"
               "Estadisticas de la simulacion \n "
               "------------------------------------------------------")
+        for hilillo in self.__hilillos:
+            self.__hilillos[hilillo].print()
         self.__coreStatistics0.print()
         print("Cache Data2WACache")
         self.cache0.print()
