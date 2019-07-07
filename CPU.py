@@ -31,7 +31,7 @@ class CPU:
         self.__lock_owner = [-1, -1, -1, -1]
 
 
-    # Se inician los cores
+    # Starts the cores for the simulation and prints statistics after the cores are finished
     def start_cores(self):
         self.__core1.start()
         if self.__core_count > 1:

@@ -25,7 +25,7 @@ class SimulationStatistics:
         else:
             self.cache1 = cache
 
-    #Agrega las estadisticas de cada hilillo y hace un update de si ya estaban
+    #Adds or updates statistics of each hilillo
     def add_hilillo_statistics(self, hilillo: HililloStatistics):
         if hilillo.get_id() in self.__hilillos:
             hilillo_temp: HililloStatistics = self.__hilillos[hilillo.get_id()]
@@ -39,7 +39,7 @@ class SimulationStatistics:
     def print_statistics(self):
         print("\n ------------------------------------------------------\n"
               "Estadisticas de la simulacion \n "
-              "------------------------------------------------------")
+              "------------------------------------------------------\n")
         for hilillo in self.__hilillos:
             self.__hilillos[hilillo].print()
         self.__coreStatistics0.print()

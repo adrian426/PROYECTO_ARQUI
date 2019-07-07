@@ -7,7 +7,6 @@ class HililloStatistics:
         self.registers = registers
         self.cycles = cycles
         self.rl = rl
-        self.runs = runs
 
     def add_cycles(self, cycles):
         self.cycles += cycles

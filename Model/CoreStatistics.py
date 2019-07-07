@@ -18,8 +18,5 @@ class CoreStatistics:
         self.__avg_miss = self.__cache_misses / self.__memory_access_hits
 
     def print(self):
-        print("Core " + str(self.__id))
-        # for hilillo in self.__hilillos:
-        #     print("\nHilillo " + str(hilillo) + "   Repeticiones: " + str(self.__hilillos[hilillo].get_runs()))
-        #     self.__hilillos[hilillo].print()
-        print("\n\nTasa de fallos: " + str(self.__cache_misses) + "\n Avg (fallos/memoria): " + str(self.__avg_miss))
+        print("\nCore " + str(self.__id)+"\n-----------------")
+        print("\nTasa de fallos: " + str(self.__cache_misses) + "\n Avg (fallos/memoria): " + str(self.__avg_miss))
