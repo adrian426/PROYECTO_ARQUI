@@ -6,14 +6,14 @@ from SimulationStatistics import SimulationStatistics
 
 class CPU:
 
-    def __init__(self):
+    def __init__(self, hilillos_to_run):
 
         self.__pcb = PCBDataStructure()
         self.threads_barrier = Barrier(2)
         self.__dead_barrier = False
         self.__killing_lock = Lock()
         self.__waiting_lock = Lock()
-        self.__system_main_memory = MainMemory(self.__pcb)
+        self.__system_main_memory = MainMemory(self.__pcb, hilillos_to_run)
         # Hay que preguntar para que ingresen en valor del quantum
         self.__simulation_statistics = SimulationStatistics()
         self.__core0 = Core(0, self)
@@ -71,24 +71,18 @@ class CPU:
         self.__killing_lock.release()
 
     def acquire__lock(self, lock_index, core_id):
-        # if core_id == 0:
-            # print("ACQUIRE lock: " + str(lock_index) + " core: " + str(core_id))
         if self.__locks[lock_index].acquire(False):
             self.__lock_owner[lock_index] = core_id
             return True
         return False
 
     def release_lock(self, lock_index):
-        # if self.__lock_owner[lock_index] == 0:
-            # print("RELEASE lock: " + str(lock_index) + " core: " + str(self.__lock_owner[lock_index]))
         self.__lock_owner[lock_index] = -1
         self.__locks[lock_index].release()
 
     def release_locks(self, core_id):
         for index in range(0, 4):
             if self.__lock_owner[index] == core_id:
-                # if self.__lock_owner[index] == 0:
-                    # print("RELEASE lock: " + str(index) + " core: " + str(self.__lock_owner[index]))
                 self.__locks[index].release()
                 self.__lock_owner[index] = -1
 
@@ -109,8 +103,6 @@ class CPU:
 
     # Return if the memory address its on the other core cache
     def get_if_mem_address_is_on_core_cache(self, core, memory_address):
-        if int(memory_address/16) == 16:
-            print("")
         if core == 0 or self.__core_count <= 1:
             return self.__core0.get_if_mem_address_is_on_self_cache(memory_address)
         else:

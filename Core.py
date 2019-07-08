@@ -64,19 +64,14 @@ class Core(Thread):
     def run(self):
         while not self.__finished:
             self.context_switch()
-            # if self.PC == 424:
-            #     print("")
-            # print("PC here " + str(self.PC))
             self.__cycles = 0
             while self.quantum != 0 and self.__hilillo_finished:
                 self.__cpu_instance.wait()
                 instruction_to_execute = self.get_instruction_to_execute(self.PC)
                 self.increment_PC_default()  # increment of the PC after geting the instruction to execute
-                instruction_to_print = str(self.hilillo_id) + " owner " + str(self.__core_id)
                 self.decode(instruction_to_execute)
                 self.set_instruction_system_clock_cycles(1)
                 self.release_all_locks_acquired()
-                # print(instruction_to_print + " instruction " + instruction_to_execute.instruction_to_string())
                 # Recordar agregar release_all_locks_acquired() cuando implementemos este ciclo
             hilillo_statistics = HililloStatistics(self.__core_id, self.hilillo_id, self.register, self.__cycles, self.RL, 1)
             self.__cpu_instance.get_simulation_statistics().add_hilillo_statistics(hilillo_statistics)
@@ -147,7 +142,6 @@ class Core(Thread):
             self.__hilillo_finished = True
         # We call the pcb load function to load the next "hilillo" to execute
         if not self.load_pcb():
-            # print("Empty PCB structure")
             self.finish_execution()
             self.quantum = 0
 
@@ -224,23 +218,15 @@ class Core(Thread):
 
     # Release locks methods
     def release_data_bus(self):
-        # if self.__core_id == 0:
-            # print("RELEASE lock: data bus core: " + str(self.__core_id))
         self.__cpu_instance.release_lock(0)
 
     def release_instruction_bus(self):
-        # if self.__core_id == 0:
-            # print("RELEASE lock: instruction bus core: " + str(self.__core_id))
         self.__cpu_instance.release_lock(1)
 
     def release_self_cache(self):
-        # if self.__core_id == 0:
-            # print("RELEASE lock: cache core: " + str(self.__core_id))
         self.__cpu_instance.release_lock(self.__core_id + 2)
 
     def release_other_core_cache(self):
-        # if self.__core_id == 0:
-            # print("RELEASE lock: other cache core: " + str(self.__core_id))
         if self.__core_id == 0:
             self.__cpu_instance.release_lock(3)
         else:
@@ -285,14 +271,10 @@ class Core(Thread):
 
     # Function to get if the memory_address block its stored on self cache
     def get_if_mem_address_is_on_self_cache(self, memory_address):
-        if int(memory_address/16) == 16:
-            print("")
         return self.data_cache.get_if_mem_address_is_cached(memory_address)
 
     # Function to get if the memory_address block its stored on other core cache
     def get_if_memory_address_on_other_cache(self, memory_address):
-        if memory_address == 128:
-            print("")
         return self.__cpu_instance.get_if_mem_address_is_on_core_cache(not self.__core_id, memory_address)
 
     # Function to get the state of the block with the memory address
@@ -303,7 +285,6 @@ class Core(Thread):
     def get_memory_address_state_on_other_cache(self, memory_address):
         return self.__cpu_instance.get_state_of_mem_address_on_core(not self.__core_id, memory_address)
 
-    # ToDo revisar, por aquí anda el fallo
     # Method to store the block on the cache, returns the clock cycles to store
     def store_block_on_self_cache(self, state, memory_address, data_block):
         miss = False
@@ -320,7 +301,6 @@ class Core(Thread):
         else:
             return 0
 
-    # ToDo revisar, no está haciendo nada
     # Method to store the cache block on main memory and change the block state
     def store_data_cache_block_on_main_mem(self, memory_address, cache_block_new_state):
         block_to_store = DataBlock(0)
@@ -329,7 +309,6 @@ class Core(Thread):
         self.change_cache_block_state(memory_address, cache_block_new_state)
         return block_to_store
 
-    # ToDo revisar, no está haciendo nada
     # Method to store a block on other core cache
     def store_other_core_data_cache_block_on_main_memory(self, memory_address, cache_block_new_state):
         return self.__cpu_instance.store_data_cache_block_on_mm_on_core(

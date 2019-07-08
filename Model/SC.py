@@ -32,9 +32,6 @@ class SC:
         mem_add_to_store = \
             self.__core_instance.get_register_value(direction_registry)
 
-        if int(mem_add_to_store/16) == 8 or int(mem_add_to_store/16) == 16 or int(mem_add_to_store/16) == 9:
-            print("Store C en bloque 16 con instrucción " + instruction.instruction_to_string()+ " " + str(self.__core_instance.get_PC()) + " ->" + str(mem_add_to_store))
-
         # Check if there is a cache miss
         # LOCK SELF CACHE!!
         if self.__core_instance.acquire_self_cache():
@@ -43,7 +40,6 @@ class SC:
             if mem_address_on_cache:
                 mem_address_state_on_cache = self.__core_instance.get_memory_address_state_on_cache(mem_add_to_store)
                 rl_bool_result = self.__core_instance.get_self_rl()
-                print("RL " + str(rl_bool_result))
                 if mem_address_state_on_cache == StatesEnum.SHARED and \
                         (rl_bool_result == mem_add_to_store):
                     # Check if the block is shared and the RL value is the needed

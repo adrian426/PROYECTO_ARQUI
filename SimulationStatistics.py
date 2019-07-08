@@ -27,13 +27,14 @@ class SimulationStatistics:
 
     #Adds or updates statistics of each hilillo
     def add_hilillo_statistics(self, hilillo: HililloStatistics):
-        if hilillo.get_id() in self.__hilillos:
-            hilillo_temp: HililloStatistics = self.__hilillos[hilillo.get_id()]
-            hilillo_temp.add_cycles(hilillo.cycles)
-            hilillo_temp.add_runs(hilillo.core)
-            self.__hilillos[hilillo.get_id()] = hilillo_temp
-        else:
-            self.__hilillos[hilillo.get_id()] = hilillo
+        if hilillo.get_id() != -1:
+            if hilillo.get_id() in self.__hilillos:
+                hilillo_temp: HililloStatistics = self.__hilillos[hilillo.get_id()]
+                hilillo_temp.add_cycles(hilillo.cycles)
+                hilillo_temp.add_runs(hilillo.core)
+                self.__hilillos[hilillo.get_id()] = hilillo_temp
+            else:
+                self.__hilillos[hilillo.get_id()] = hilillo
 
     #prints statistics of the whole simulation
     def print_statistics(self):

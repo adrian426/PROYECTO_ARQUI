@@ -1,7 +1,7 @@
 from InstructionMemory.InstructionMemory import InstructionMemory
 from DataMemory.DataMemory import DataMemory
 from PCB import PCB
-from Utils.FileReader import get_hilillos_files_list, read_hilillos
+from Utils.FileReader import FileReader
 
 # Direccion inicial de la memoria de instrucciones
 INITIAL_DIR = 384
@@ -11,22 +11,23 @@ INITIAL_DIR = 384
 class MainMemory:
 
     # Constructor
-    def __init__(self, pcb_structure):
+    def __init__(self, pcb_structure, hilillos_to_run):
 
         self.__data_memory = DataMemory()
         self.__instruction_memory = InstructionMemory()
 
         self.__data_memory.initialize_memory()
+        self.__file_reader = FileReader(hilillos_to_run)
 
         # Obtiene los nombres de los hilillos
-        hilillos_names = get_hilillos_files_list()
+        hilillos_names = self.__file_reader.get_hilillos_files_list()
 
         # Contador de direcciones de memoria
         instruction_counter = INITIAL_DIR
 
         # Crea el arreglo de hilillos e inicializa la memoria de instrucciones
         for hilillo in hilillos_names:
-            instructions_hilillo = read_hilillos(hilillo)
+            instructions_hilillo = self.__file_reader.read_hilillos(hilillo)
 
             # Inicializa la memoria de instrucciones
             bytes_added = 0

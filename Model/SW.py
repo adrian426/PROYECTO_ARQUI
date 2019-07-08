@@ -19,7 +19,6 @@ class SW:
         while self.exec_store(instruction) == LOCK_ERROR:
             self.__core_instance.release_all_locks_acquired()
             self.__core_instance.set_instruction_system_clock_cycles(1)
-            # ToDo revisar esto
 
     # Receives the core instance, and the instruction to execute
     # Returns the execution cycles of the instruction, -1 if the execute cant get the locks
@@ -33,9 +32,6 @@ class SW:
         # Calculate the direction of the memory address on memory
         mem_add_to_store = \
             self.__core_instance.get_register_value(direction_registry) + direction_immediate
-
-        if int(mem_add_to_store/16) == 8 or int(mem_add_to_store/16) == 16 or int(mem_add_to_store/16) == 9:
-            print("Load R en bloque 16 con instruccion")
 
         # Check if there is a cache miss
         # LOCK SELF CACHE!!
