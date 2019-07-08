@@ -20,13 +20,13 @@ class Core(Thread):
         # Core execution finished
         self.__finished = False
 
-        # Constructor del thread
+        # Thread constructor
         Thread.__init__(self)
 
-        # Se crea le bloque de datos que se le va a a pasar a todos los bloques
+        # Create the data block for initialize the data cache
         data_block = DataBlock(0)
 
-        # Dependiendo del tipo de cache se inicializa
+        # Initialize the cache of the core
         if cache_type == 0:
             self.data_cache = Data2WACache(data_block)
         elif cache_type == 1:
@@ -34,7 +34,7 @@ class Core(Thread):
         else:
             raise TypeError("Unknown Value for cache type.")
 
-        # Se inicializa la cache de instrucciones
+        # Initialize the instruction cache
         instruction = Instruction()
         instruction.set_instruction_values([0, 0, 0, 0])
         self.instructionCache = InstructionsCache(instruction)
@@ -46,7 +46,7 @@ class Core(Thread):
         self.__hilillo_finished = True
         self.__cycles = 0
 
-        # Se inicializa las instrucciones
+        # Initialize the instructions
         self.__add = ADD.ADD(self)
         self.__addi = ADDI.ADDI(self)
         self.__div = DIV.DIV(self)
@@ -61,6 +61,7 @@ class Core(Thread):
         self.__lr = LR.LR(self)
         self.__sc = SC.SC(self)
 
+    # Method to start the execution of the core
     def run(self):
         while not self.__finished:
             self.context_switch()
@@ -68,16 +69,16 @@ class Core(Thread):
             while self.quantum != 0 and self.__hilillo_finished:
                 self.__cpu_instance.wait()
                 instruction_to_execute = self.get_instruction_to_execute(self.PC)
-                self.increment_PC_default()  # increment of the PC after geting the instruction to execute
+                # increment of the PC after geting the instruction to execute
+                self.increment_PC_default()
                 self.decode(instruction_to_execute)
                 self.set_instruction_system_clock_cycles(1)
                 self.release_all_locks_acquired()
-                # Recordar agregar release_all_locks_acquired() cuando implementemos este ciclo
             hilillo_statistics = HililloStatistics(self.__core_id, self.hilillo_id, self.register, self.__cycles, self.RL, 1)
             self.__cpu_instance.get_simulation_statistics().add_hilillo_statistics(hilillo_statistics)
         self.__cpu_instance.increase_finished_counter()
 
-    #decodes and execute the instruction pointed by the PC
+    # Decodes and execute the instruction pointed by the PC
     def decode(self, instruction):
         instruction_code = int(instruction.get_instruction()[0])
         if instruction_code == 19:
@@ -127,11 +128,10 @@ class Core(Thread):
             return True
         return False
 
+    # Method to make the context switch
     def context_switch(self):
-        # No se si se manda PC, depende donde se aumente.
         pcb = PCB(self.hilillo_id, self.PC, self.register)
 
-        # hay que ver si esto funca con la instruccion fin, me parece que no
         # if it's not the first iteration, doesn't store the init value of the core
         if self.hilillo_id != -1:
             # if the quantum hasn't ended, the PCB is added again to the queue.
@@ -145,6 +145,7 @@ class Core(Thread):
             self.finish_execution()
             self.quantum = 0
 
+    # Method to decrease the quantum
     def decrease_quantum(self):
         if self.quantum > 0:
             self.quantum -= 1
@@ -344,12 +345,15 @@ class Core(Thread):
         self.__finished = True
         self.__cpu_instance.kill_barrier()
 
+    # Method to get the data cache
     def get_data_cache(self):
         return self.data_cache
 
+    # Method to increase the statistics misses
     def increase_cache_miss(self):
         self.__cpu_instance.get_simulation_statistics().getCoreStatistics(self.__core_id).increase_cache_miss()
 
+    # Method to increase the statistics memory access
     def increase_memory_access_hits(self):
         self.__cpu_instance.get_simulation_statistics().getCoreStatistics(self.__core_id).increase_memory_access_hits()
 

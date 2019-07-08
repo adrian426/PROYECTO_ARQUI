@@ -13,10 +13,16 @@ class SC:
     def __init__(self, core_instance):
         self.__core_instance = core_instance
 
+    # Method to start the SC instruction execution
     def execute(self, instruction):
         while self.exec_store(instruction) == LOCK_ERROR:
+            # If the instruction cant get the locks
+            # Releases all the locks acquired by the core
             self.__core_instance.release_all_locks_acquired()
+            # Wait to the next clock cycle
             self.__core_instance.set_instruction_system_clock_cycles(1)
+
+        # Execution finished, increase the memory access counter
         self.__core_instance.increase_memory_access_hits()
 
     # Start the instruction execution

@@ -1,6 +1,6 @@
 from InstructionMemory.Instruction import Instruction
 
-# Direccion inicial de la memoria de instrucciones
+# Initial memory direction of the instruction memory
 INITIAL_DIR = 384
 
 
@@ -10,30 +10,31 @@ class InstructionBlock:
         self.__words = [Instruction(), Instruction(), Instruction(), Instruction()]
         self.__word_counter = 0
 
-    # Metodo para insertar una instruccion en el bloque
+    # Method to insert a instruction on a block
     def insert_instruction(self, instruction):
-        # Se revisa que se pueda insertar la instruccion
+        # Check if the instruction can be inserted
         if self.__word_counter >= 4:
             raise TypeError("No se pueden insertar mas de 4 instrucciones en un bloque")
         self.__words[self.__word_counter].set_instruction_values(instruction)
         self.__word_counter += 1
 
-    # Metodo para obtener una instruccion, recibe el PC de la instruccion
+    # Method to get a instruction, receive the PC of the instruction
     def get_instruction(self, pc):
-        # Se revisa que el pc recibido sea mayor a 384
+        # Check if the PC is greater than 384
         if pc < INITIAL_DIR:
             raise TypeError("Se recibio un PC de una instruccion que no existe")
 
-        # Se adapta el PC para utilizarlo en esta funcion
+        # Change the PC to get the direction in the instruction memory
         pc_function = (pc % 16) // 4
 
-        # Se revisa que la instruccion exista
+        # Check if the instruction exists
         if pc_function > self.__word_counter:
             raise TypeError("Se solicito una instruccion que no existe")
 
-        # Se retorna la instruccion
+        # Return the isntruction
         return self.__words[pc_function]
 
+    # Method to print the block
     def print_block(self):
         for instruction in self.__words:
             instruction.print_instruction()

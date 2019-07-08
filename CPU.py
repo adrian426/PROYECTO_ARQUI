@@ -14,7 +14,6 @@ class CPU:
         self.__killing_lock = Lock()
         self.__waiting_lock = Lock()
         self.__system_main_memory = MainMemory(self.__pcb, hilillos_to_run)
-        # Hay que preguntar para que ingresen en valor del quantum
         self.__simulation_statistics = SimulationStatistics()
         self.__core0 = Core(0, self)
         self.__core1 = Core(1, self)
@@ -25,11 +24,9 @@ class CPU:
         self.__core_finished = False
         self.__core_finished_counter = 0
 
-
-        # bus datos, bus instrucciones, cache 0, cache 1
+        # Data buss, instruction buss, cache 0, cache 1
         self.__locks = [Lock(), Lock(), Lock(), Lock()]
         self.__lock_owner = [-1, -1, -1, -1]
-
 
     # Starts the cores for the simulation and prints statistics after the cores are finished
     def start_cores(self):
@@ -38,7 +35,8 @@ class CPU:
             self.__core0.start()
         thread = Thread(target=self.print_statistics(), args=())
         thread.start()
-        
+
+    # Print the statistics
     def print_statistics(self):
         self.__core0.join()
         self.__core1.join()
@@ -48,7 +46,7 @@ class CPU:
         self.__simulation_statistics.print_statistics()
         print("Simulation Finished")
 
-    # Metodo para la barrera e incrementar el relog del sistema
+    # Method to use the barrier
     def wait(self):
         if self.__core_count > 1:
             if not self.__core_finished:
@@ -63,6 +61,7 @@ class CPU:
                 if self.__core_finished_counter == 2:
                     self.__simulation_statistics.add_data_memory(self.__system_main_memory.get_data_memory())
 
+    # Method to kill the barrier
     def kill_barrier(self):
         self.__killing_lock.acquire(True)
         if not self.__dead_barrier:
@@ -70,25 +69,30 @@ class CPU:
             self.__dead_barrier = True
         self.__killing_lock.release()
 
+    # Method to acquire specific lock
     def acquire__lock(self, lock_index, core_id):
         if self.__locks[lock_index].acquire(False):
             self.__lock_owner[lock_index] = core_id
             return True
         return False
 
+    # Method to release specific lock
     def release_lock(self, lock_index):
         self.__lock_owner[lock_index] = -1
         self.__locks[lock_index].release()
 
+    # Method to release all the locks acquired by the core
     def release_locks(self, core_id):
         for index in range(0, 4):
             if self.__lock_owner[index] == core_id:
                 self.__locks[index].release()
                 self.__lock_owner[index] = -1
 
+    # Method to get the PCB structure
     def get_pcb_ds(self):
         return self.__pcb
 
+    # Method to get the main memory
     def get_main_memory(self):
         return self.__system_main_memory
 
@@ -137,8 +141,10 @@ class CPU:
     def get_default_quantum(self):
         return self.__default_quantum
 
+    # Method to get the simulation statistics
     def get_simulation_statistics(self):
         return self.__simulation_statistics
-    
+
+    # Method to increase the finished cores counter
     def increase_finished_counter(self):
         self.__core_finished_counter += 1

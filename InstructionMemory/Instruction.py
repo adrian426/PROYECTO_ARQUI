@@ -3,20 +3,22 @@ class Instruction:
     def __init__(self):
         self.__instruction = []
 
-    # Metodo para establecer los valores de la instruccion
+    # Method to set the instruction values
     def set_instruction_values(self, instruction_array):
-        # Se revisa que el tamaño del arreglo que representa la instruccion sea el correcto
+        # Check if the data size is correct
         if len(instruction_array) != 4:
             raise TypeError("Se recibio una instruccion con una cantidad incorrecta de bytes")
-        # Se guarda la instruccion
+        # Store the instruction
         self.__instruction = instruction_array
 
+    # Method to get the instruction array
     def get_instruction(self):
         return self.__instruction
 
-    # Metodos para imprimir la instruccion
+    # Method to print the instruction
     def print_instruction(self):
         print(self.__instruction)
 
+    # Method to get a string with the instruction values
     def instruction_to_string(self):
         return str(self.__instruction)
