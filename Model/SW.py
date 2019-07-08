@@ -19,6 +19,7 @@ class SW:
         while self.exec_store(instruction) == LOCK_ERROR:
             self.__core_instance.release_all_locks_acquired()
             self.__core_instance.set_instruction_system_clock_cycles(1)
+        self.__core_instance.increase_memory_access_hits()
 
     # Receives the core instance, and the instruction to execute
     # Returns the execution cycles of the instruction, -1 if the execute cant get the locks

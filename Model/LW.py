@@ -16,6 +16,7 @@ class LW:
         while self.exec_load(instruction) == LOCK_ERROR:
             self.__core_instance.release_all_locks_acquired()
             self.__core_instance.set_instruction_system_clock_cycles(1)
+        self.__core_instance.increase_memory_access_hits()
 
     # Start the instruction execution
     # Receives the instruction to execute
