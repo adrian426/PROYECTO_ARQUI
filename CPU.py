@@ -54,10 +54,13 @@ class CPU:
                     barrier_thread_id = self.threads_barrier.wait()
                     if barrier_thread_id == 0:
                         self.__system_clock += 1
+                        print("Ciclo de reloj: " + str(self.__system_clock))
                 except:
                     self.__system_clock += 1
+                    print("Ciclo de reloj: " + str(self.__system_clock))
             else:
                 self.__system_clock += 1
+                print("Ciclo de reloj: " + str(self.__system_clock))
                 if self.__core_finished_counter == 2:
                     self.__simulation_statistics.add_data_memory(self.__system_main_memory.get_data_memory())
 

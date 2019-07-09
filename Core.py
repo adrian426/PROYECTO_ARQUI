@@ -64,6 +64,7 @@ class Core(Thread):
     # Method to start the execution of the core
     def run(self):
         while not self.__finished:
+            print("Hilillo " + str(self.hilillo_id))
             self.context_switch()
             self.__cycles = 0
             while self.quantum != 0 and self.__hilillo_finished:
