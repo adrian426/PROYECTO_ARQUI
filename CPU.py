@@ -11,7 +11,7 @@ class CPU:
         self.__pcb = PCBDataStructure()
         self.threads_barrier = Barrier(2)
         self.__dead_barrier = False
-        self.__killing_lock = Lock()
+        self.__killing_lock = Lock()  # Lock used to kill the barrier
         self.__waiting_lock = Lock()
         self.__system_main_memory = MainMemory(self.__pcb, hilillos_to_run)
         self.__simulation_statistics = SimulationStatistics()

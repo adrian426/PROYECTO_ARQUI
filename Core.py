@@ -64,7 +64,6 @@ class Core(Thread):
     # Method to start the execution of the core
     def run(self):
         while not self.__finished:
-            print("Hilillo " + str(self.hilillo_id))
             self.context_switch()
             self.__cycles = 0
             while self.quantum != 0 and self.__hilillo_finished:
@@ -111,8 +110,11 @@ class Core(Thread):
         elif instruction_code == 999:
             self.__cpu_instance.wait()
             self.quantum = 0
+        # Quantum is decreased after an instruction is done executing.
         self.decrease_quantum()
 
+        # if the quantum reaches 0 and the instruction is not "Fin",
+        # we turn on the flag to indicate that the "hilillo" hasn't finished.
         if instruction_code != 999:
             if self.quantum == 0:
                 self.__hilillo_finished = False
@@ -145,6 +147,8 @@ class Core(Thread):
         if not self.load_pcb():
             self.finish_execution()
             self.quantum = 0
+        else: # if we could load a new PCB, we print it's id and the id of the core that loaded it.
+            print("Hilillo " + str(self.hilillo_id) + " en el core " + str(self.__core_id) + " ")
 
     # Method to decrease the quantum
     def decrease_quantum(self):

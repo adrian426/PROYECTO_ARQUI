@@ -1,6 +1,9 @@
 from queue import Queue
 
 
+# Data Structure used to manage the PCB's of the "hilillos", when a "hilillo" is done,
+# it's stored in the finishedPCBs queue.
+# Also note that python's Queue is thread safe.
 class PCBDataStructure:
 
     def __init__(self):

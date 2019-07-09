@@ -28,15 +28,17 @@ class Data2WACache(AbsCache):
         return int(memAdd / 16) % 2
 
     @staticmethod
+    # Returns the way range used for each way.
     def get_way_range(way):
         if way == 0:
-            return range(0,4)
+            return range(0, 4)
         else:
-            return range(4,8)
+            return range(4, 8)
 
     def get_block_index(self, memAdd):
         way = self.get_block_way(memAdd)
         addressRange = self.get_way_range(way)
+        # We search for the block loaded in cache.
         for index in addressRange:
             if self.dataBlocksAddress[index] == int(memAdd / 16) and self.dataBlocksState[index] != StatesEnum.INVALID:
                 return index
@@ -52,9 +54,10 @@ class Data2WACache(AbsCache):
         else:
             way = 0
         self.dataBlocksLoaded[targetBlock] = dataBlock
-        self.dataBlocksAddress[targetBlock] = int(memAdd/16) # Store the block address
+        self.dataBlocksAddress[targetBlock] = int(memAdd/16)  # Store the block address
         self.dataBlocksState[targetBlock] = state
         self.augment_way_fifo_index(way)
+
 
     def augment_way_fifo_index(self, way):
         if way == 0:

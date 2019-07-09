@@ -58,9 +58,11 @@ class AbsCache(ABC):
         state = self.dataBlocksState[index]
         return state
 
+    # Returns the address of the block at the specified index.
     def get_block_address(self, index):
         return self.dataBlocksAddress[index]*16
 
+    # Returns the block at the index specified.
     def get_block(self, index):
         return self.dataBlocksLoaded[index]
 
