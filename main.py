@@ -20,7 +20,8 @@ def main():
             hilillos_to_use = int(result)
 
         # Initialize CPU
-    cpu = CPU(hilillos_to_use)
+    quantum = input("Ingrese el quantum\n")
+    cpu = CPU(hilillos_to_use, int(quantum))
 
     # Start the simulation
     cpu.start_cores()

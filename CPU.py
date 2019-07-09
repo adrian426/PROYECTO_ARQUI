@@ -6,7 +6,7 @@ from SimulationStatistics import SimulationStatistics
 
 class CPU:
 
-    def __init__(self, hilillos_to_run):
+    def __init__(self, hilillos_to_run, quantum):
 
         self.__pcb = PCBDataStructure()
         self.threads_barrier = Barrier(2)
@@ -20,7 +20,7 @@ class CPU:
         self.__core_count = 2
         self.running_cores = 2
         self.__system_clock = 0
-        self.__default_quantum = 20
+        self.__default_quantum = quantum
         self.__core_finished = False
         self.__core_finished_counter = 0
 
